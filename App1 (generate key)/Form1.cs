@@ -51,12 +51,11 @@ namespace BSK
         {
             // wygenerowanie kluczy o d³ugoœci 4096
             RSA rsa = RSA.Create(4096);
-            byte[] privateKeyBytes = Encoding.UTF8.GetBytes(rsa.ToXmlString(true));
-            string publicKey = rsa.ToXmlString(false);
+            byte[] privateKeyBytes = rsa.ExportRSAPrivateKey();
+            byte[] publicKeyBytes = rsa.ExportRSAPublicKey();
 
             // Utworzenie klucza z Pinu
-            SHA256 sha256 = SHA256.Create();
-            byte[] aesKey = sha256.ComputeHash(Encoding.UTF8.GetBytes(textBox1.Text));
+            byte[] aesKey = SHA256.HashData(Encoding.UTF8.GetBytes(textBox1.Text));
 
             // zaszyfrowanie klucza prywatnego
             Aes aes = Aes.Create();
@@ -69,9 +68,12 @@ namespace BSK
             cs.FlushFinalBlock();
             byte[] encryptedPrivateKey = ms.ToArray();
 
+            // zapis do pliku
             File.WriteAllBytes(label1.Text+"\\privateKey.enc", encryptedPrivateKey);
-            File.WriteAllText(label1.Text +"\\publicKey.xml", publicKey);
+            File.WriteAllBytes(label1.Text+"\\publicKey.bin", publicKeyBytes);
             File.WriteAllBytes(label1.Text+"\\iv.bin", iv);
+
+            MessageBox.Show("Klucze zapisane poprawnie!");
         }
     }
 }

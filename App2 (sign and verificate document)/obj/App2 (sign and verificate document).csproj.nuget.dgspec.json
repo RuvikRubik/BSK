@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\falco\\Documents\\GitHub\\BSK\\App1 (generate key)\\BSK.csproj": {}
+    "C:\\Users\\falco\\Documents\\GitHub\\BSK\\App2 (sign and verificate document)\\App2 (sign and verificate document).csproj": {}
   },
   "projects": {
-    "C:\\Users\\falco\\Documents\\GitHub\\BSK\\App1 (generate key)\\BSK.csproj": {
+    "C:\\Users\\falco\\Documents\\GitHub\\BSK\\App2 (sign and verificate document)\\App2 (sign and verificate document).csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\falco\\Documents\\GitHub\\BSK\\App1 (generate key)\\BSK.csproj",
-        "projectName": "BSK",
-        "projectPath": "C:\\Users\\falco\\Documents\\GitHub\\BSK\\App1 (generate key)\\BSK.csproj",
+        "projectUniqueName": "C:\\Users\\falco\\Documents\\GitHub\\BSK\\App2 (sign and verificate document)\\App2 (sign and verificate document).csproj",
+        "projectName": "App2 (sign and verificate document)",
+        "projectPath": "C:\\Users\\falco\\Documents\\GitHub\\BSK\\App2 (sign and verificate document)\\App2 (sign and verificate document).csproj",
         "packagesPath": "C:\\Users\\falco\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\falco\\Documents\\GitHub\\BSK\\App1 (generate key)\\obj\\",
+        "outputPath": "C:\\Users\\falco\\Documents\\GitHub\\BSK\\App2 (sign and verificate document)\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -49,6 +49,16 @@
       "frameworks": {
         "net8.0-windows7.0": {
           "targetAlias": "net8.0-windows",
+          "dependencies": {
+            "iTextSharp": {
+              "target": "Package",
+              "version": "[5.5.13.4, )"
+            },
+            "itext": {
+              "target": "Package",
+              "version": "[9.1.0, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",

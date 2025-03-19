@@ -14,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\falco\\Documents\\GitHub\\BSK\\BSK.csproj",
+      "projectUniqueName": "C:\\Users\\falco\\Documents\\GitHub\\BSK\\App1 (generate key)\\BSK.csproj",
       "projectName": "BSK",
-      "projectPath": "C:\\Users\\falco\\Documents\\GitHub\\BSK\\BSK.csproj",
+      "projectPath": "C:\\Users\\falco\\Documents\\GitHub\\BSK\\App1 (generate key)\\BSK.csproj",
       "packagesPath": "C:\\Users\\falco\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\falco\\Documents\\GitHub\\BSK\\obj\\",
+      "outputPath": "C:\\Users\\falco\\Documents\\GitHub\\BSK\\App1 (generate key)\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

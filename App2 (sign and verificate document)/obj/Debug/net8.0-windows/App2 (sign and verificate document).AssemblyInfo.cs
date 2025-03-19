@@ -11,12 +11,12 @@
 using System;
 using System.Reflection;
 
-[assembly: System.Reflection.AssemblyCompanyAttribute("BSK")]
+[assembly: System.Reflection.AssemblyCompanyAttribute("App2 (sign and verificate document)")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b266e8289541b8e81d2f50771eb34bef37f374fb")]
-[assembly: System.Reflection.AssemblyProductAttribute("BSK")]
-[assembly: System.Reflection.AssemblyTitleAttribute("BSK")]
+[assembly: System.Reflection.AssemblyProductAttribute("App2 (sign and verificate document)")]
+[assembly: System.Reflection.AssemblyTitleAttribute("App2 (sign and verificate document)")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
 [assembly: System.Runtime.Versioning.TargetPlatformAttribute("Windows7.0")]
 [assembly: System.Runtime.Versioning.SupportedOSPlatformAttribute("Windows7.0")]
