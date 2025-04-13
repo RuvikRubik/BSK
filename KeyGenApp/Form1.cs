@@ -1,5 +1,6 @@
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace KeyGenApp
 {
@@ -55,18 +56,38 @@ namespace KeyGenApp
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
+            string text = textBox1.Text;
 
+            if(Regex.IsMatch(text, @"^\d{4}$"))
+            {
+                panel1.BackColor = Color.Gray;
+                button2.Enabled = true;
+            }
+            else
+            {
+                panel1.BackColor = Color.Red;
+                button2.Enabled = false;
+            }
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
             label2.Text = defaultPath;
+            button2.Enabled = false;
         }
 
         // Powrót do podstawowej œcie¿ki zapisu
         private void button3_Click(object sender, EventArgs e)
         {
             label2.Text = defaultPath;
+        }
+
+        private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true;
+            }
         }
     }
 }

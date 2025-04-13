@@ -35,6 +35,8 @@
             textBox1 = new TextBox();
             label3 = new Label();
             button3 = new Button();
+            panel1 = new Panel();
+            panel1.SuspendLayout();
             SuspendLayout();
             // 
             // button1
@@ -58,9 +60,9 @@
             // 
             // button2
             // 
-            button2.Location = new Point(114, 121);
+            button2.Location = new Point(128, 122);
             button2.Name = "button2";
-            button2.Size = new Size(126, 23);
+            button2.Size = new Size(141, 23);
             button2.TabIndex = 2;
             button2.Text = "Wygeneruj klucze";
             button2.UseVisualStyleBackColor = true;
@@ -77,20 +79,23 @@
             // 
             // textBox1
             // 
-            textBox1.Location = new Point(128, 92);
+            textBox1.Dock = DockStyle.Fill;
+            textBox1.Location = new Point(2, 2);
+            textBox1.Margin = new Padding(2);
             textBox1.Name = "textBox1";
-            textBox1.Size = new Size(100, 23);
+            textBox1.Size = new Size(136, 23);
             textBox1.TabIndex = 4;
             textBox1.TextChanged += textBox1_TextChanged;
+            textBox1.KeyPress += textBox1_KeyPress;
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(12, 95);
+            label3.Location = new Point(12, 96);
             label3.Name = "label3";
-            label3.Size = new Size(109, 15);
+            label3.Size = new Size(112, 15);
             label3.TabIndex = 5;
-            label3.Text = "Podaj PIN (4-Cyfry)";
+            label3.Text = "Podaj PIN (4-Cyfry):";
             // 
             // button3
             // 
@@ -102,14 +107,24 @@
             button3.UseVisualStyleBackColor = true;
             button3.Click += button3_Click;
             // 
+            // panel1
+            // 
+            panel1.Controls.Add(textBox1);
+            panel1.Location = new Point(129, 92);
+            panel1.Margin = new Padding(2);
+            panel1.Name = "panel1";
+            panel1.Padding = new Padding(2);
+            panel1.Size = new Size(140, 24);
+            panel1.TabIndex = 7;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(327, 175);
+            Controls.Add(panel1);
             Controls.Add(button3);
             Controls.Add(label3);
-            Controls.Add(textBox1);
             Controls.Add(label2);
             Controls.Add(button2);
             Controls.Add(label1);
@@ -117,6 +132,8 @@
             Name = "Form1";
             Text = "Form1";
             Load += Form1_Load;
+            panel1.ResumeLayout(false);
+            panel1.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -130,5 +147,6 @@
         private TextBox textBox1;
         private Label label3;
         private Button button3;
+        private Panel panel1;
     }
 }
