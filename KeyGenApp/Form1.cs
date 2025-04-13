@@ -15,10 +15,14 @@ namespace KeyGenApp
         private const int DBT_DEVICEREMOVECOMPLETE = 0x8004;
         // Podstawowa œcie¿ka generacji kluczy
         static string folder = "Klucze";
+        static string pubKeyName = "publicKey.bin";
+        static string ppkName = "privateKey.enc";
+        static string vectorName = "iv.bin";
         string usbPath = "";
         string defaultPath = Path.Combine(Environment.GetFolderPath(
             Environment.SpecialFolder.MyDocuments), folder);
 
+        // Zebranie dostêpnych pendrive'ów z formatem FAT32
         List<string> GetPendriveList()
         {
             List<string> list = new List<string>();
@@ -76,6 +80,7 @@ namespace KeyGenApp
             }
         }
 
+        // Obs³uga usuniêcia pendrive'a
         void CheckIfDeviceMissing()
         {
             if (!Directory.Exists(usbPath))
@@ -150,9 +155,9 @@ namespace KeyGenApp
             byte[] encryptedPrivateKey = ms.ToArray();
 
             // zapis do pliku
-            File.WriteAllBytes(textBox2.Text + "\\privateKey.enc", encryptedPrivateKey);
-            File.WriteAllBytes(textBox2.Text + "\\publicKey.bin", publicKeyBytes);
-            File.WriteAllBytes(textBox2.Text + "\\iv.bin", iv);
+            File.WriteAllBytes(Path.Combine(textBox2.Text, ppkName), encryptedPrivateKey);
+            File.WriteAllBytes(Path.Combine(textBox2.Text, pubKeyName), publicKeyBytes);
+            File.WriteAllBytes(Path.Combine(textBox2.Text, vectorName), iv);
 
             MessageBox.Show("Klucze zapisane poprawnie!");
         }
