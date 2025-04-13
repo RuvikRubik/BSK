@@ -36,6 +36,7 @@
             button4 = new Button();
             tabControl1 = new TabControl();
             tabPage1 = new TabPage();
+            panel1 = new Panel();
             textBox4 = new TextBox();
             textBox2 = new TextBox();
             tabPage2 = new TabPage();
@@ -47,6 +48,7 @@
             label8 = new Label();
             tabControl1.SuspendLayout();
             tabPage1.SuspendLayout();
+            panel1.SuspendLayout();
             tabPage2.SuspendLayout();
             SuspendLayout();
             // 
@@ -81,7 +83,7 @@
             // label7
             // 
             label7.AutoSize = true;
-            label7.Location = new Point(3, 140);
+            label7.Location = new Point(8, 145);
             label7.Name = "label7";
             label7.Size = new Size(73, 15);
             label7.TabIndex = 9;
@@ -89,10 +91,12 @@
             // 
             // textBox1
             // 
-            textBox1.Location = new Point(82, 137);
+            textBox1.Dock = DockStyle.Fill;
+            textBox1.Location = new Point(2, 2);
             textBox1.Name = "textBox1";
-            textBox1.Size = new Size(100, 23);
+            textBox1.Size = new Size(75, 23);
             textBox1.TabIndex = 10;
+            textBox1.TextChanged += textBox1_TextChanged;
             // 
             // button4
             // 
@@ -117,12 +121,12 @@
             // 
             // tabPage1
             // 
+            tabPage1.Controls.Add(panel1);
             tabPage1.Controls.Add(textBox4);
             tabPage1.Controls.Add(textBox2);
             tabPage1.Controls.Add(label1);
             tabPage1.Controls.Add(button1);
             tabPage1.Controls.Add(button4);
-            tabPage1.Controls.Add(textBox1);
             tabPage1.Controls.Add(label3);
             tabPage1.Controls.Add(label7);
             tabPage1.Location = new Point(4, 24);
@@ -132,6 +136,15 @@
             tabPage1.TabIndex = 0;
             tabPage1.Text = "Użytkownik A";
             tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // panel1
+            // 
+            panel1.Controls.Add(textBox1);
+            panel1.Location = new Point(87, 140);
+            panel1.Name = "panel1";
+            panel1.Padding = new Padding(2);
+            panel1.Size = new Size(79, 27);
+            panel1.TabIndex = 14;
             // 
             // textBox4
             // 
@@ -239,9 +252,12 @@
             Name = "Form1";
             Text = "Form1";
             Load += Form1_Load;
+            Shown += Form1_Shown;
             tabControl1.ResumeLayout(false);
             tabPage1.ResumeLayout(false);
             tabPage1.PerformLayout();
+            panel1.ResumeLayout(false);
+            panel1.PerformLayout();
             tabPage2.ResumeLayout(false);
             tabPage2.PerformLayout();
             ResumeLayout(false);
@@ -266,5 +282,6 @@
         private TextBox textBox3;
         private TextBox textBox4;
         private TextBox textBox5;
+        private Panel panel1;
     }
 }

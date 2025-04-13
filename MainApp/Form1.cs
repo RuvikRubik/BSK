@@ -1,6 +1,7 @@
 using KeyGenApp;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace MainApp
@@ -16,6 +17,15 @@ namespace MainApp
         static string pubKeyName = "publicKey.bin";
         static string ppkName = "privateKey.enc";
         static string vectorName = "iv.bin";
+
+        // Obs³uga w³¹czenia i wy³¹czenia przycisku
+        void CheckUnlockButton(Button btn, bool pinCorrect, string usb)
+        {
+            if (pinCorrect && usb.Length > 0)
+                btn.Enabled = true;
+            else
+                btn.Enabled = false;
+        }
 
         // Zebranie dostêpnych pendrive'ów z formatem FAT32
         List<string> GetPendriveList()
@@ -190,6 +200,22 @@ namespace MainApp
         {
             button4.Enabled = false;
             button8.Enabled = false;
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            bool correct = Regex.IsMatch(textBox1.Text, @"^\d{4}$");
+            if (correct)
+                panel1.BackColor = Color.Gray;
+            else
+                panel1.BackColor = Color.Red;
+
+            CheckUnlockButton(button4, correct, textBox2.Text);
+        }
+
+        private void Form1_Shown(object sender, EventArgs e)
+        {
+            CheckForPendrives();
         }
     }
 }
