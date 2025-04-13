@@ -135,6 +135,7 @@
             Name = "Form1";
             Text = "Form1";
             Load += Form1_Load;
+            Shown += Form1_Shown;
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             ResumeLayout(false);

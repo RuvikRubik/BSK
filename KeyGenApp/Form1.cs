@@ -22,7 +22,7 @@ namespace KeyGenApp
                 {
                     if (drive.DriveFormat.Equals("FAT32", StringComparison.OrdinalIgnoreCase))
                     {
-                        list.Add(drive.RootDirectory.FullName);            
+                        list.Add(drive.RootDirectory.FullName);
                     }
                 }
             }
@@ -116,7 +116,6 @@ namespace KeyGenApp
         {
             textBox2.Text = defaultPath;
             button2.Enabled = false;
-            CheckForPendrives();
         }
 
         // Powrót do podstawowej œcie¿ki zapisu
@@ -132,6 +131,11 @@ namespace KeyGenApp
             {
                 e.Handled = true;
             }
+        }
+
+        private void Form1_Shown(object sender, EventArgs e)
+        {
+            CheckForPendrives();
         }
     }
 }
