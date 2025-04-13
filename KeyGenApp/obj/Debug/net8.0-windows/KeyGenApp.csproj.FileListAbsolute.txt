@@ -15,3 +15,4 @@ C:\Users\sigmo\source\repos\BSK\KeyGenApp\obj\Debug\net8.0-windows\refint\KeyGen
 C:\Users\sigmo\source\repos\BSK\KeyGenApp\obj\Debug\net8.0-windows\KeyGenApp.pdb
 C:\Users\sigmo\source\repos\BSK\KeyGenApp\obj\Debug\net8.0-windows\KeyGenApp.genruntimeconfig.cache
 C:\Users\sigmo\source\repos\BSK\KeyGenApp\obj\Debug\net8.0-windows\ref\KeyGenApp.dll
+C:\Users\sigmo\source\repos\BSK\KeyGenApp\obj\Debug\net8.0-windows\KeyGenApp.Form2.resources

@@ -2,24 +2,33 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.IO;
+using System.DirectoryServices;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace KeyGenApp
 {
     public partial class Form1 : Form
     {
+        // kody zdarzeñ systemowych pod³¹czenia i od³¹czenia urz¹dzeñ
+        private const int WM_DEVICECHANGE = 0x0219;
+        private const int DBT_DEVICEARRIVAL = 0x8000;
+        private const int DBT_DEVICEREMOVECOMPLETE = 0x8004;
         // Podstawowa œcie¿ka generacji kluczy
         static string folder = "Klucze";
+        string usbPath = "";
         string defaultPath = Path.Combine(Environment.GetFolderPath(
             Environment.SpecialFolder.MyDocuments), folder);
 
-        void CheckForPendrives()
+        List<string> GetPendriveList()
         {
             List<string> list = new List<string>();
 
             foreach (DriveInfo drive in DriveInfo.GetDrives())
             {
+                // Sprawdzenie czy s¹ dostêpne pendrive'y
                 if (drive.DriveType == DriveType.Removable && drive.IsReady)
                 {
+                    // Sprawdzenie czy ich format jest FAT32
                     if (drive.DriveFormat.Equals("FAT32", StringComparison.OrdinalIgnoreCase))
                     {
                         list.Add(drive.RootDirectory.FullName);
@@ -27,10 +36,18 @@ namespace KeyGenApp
                 }
             }
 
-            if (list.Count == 1)
+            return list;
+        }
+
+        // Wykrywanie ju¿ pod³¹czonych Pendrive'ów
+        void CheckForPendrives()
+        {
+            List<string> drives = GetPendriveList();
+
+            if (drives.Count == 1)
             {
                 var result = MessageBox.Show(
-                    $"Wykryto pendrive: {list[0]} \nCzy chcesz w nim zapisaæ wygenerowane klucze?",
+                    $"Wykryto pendrive: {drives[0]} \nCzy chcesz w nim zapisaæ wygenerowane klucze?",
                     "Wykryto pendrive",
                     MessageBoxButtons.YesNo,
                     MessageBoxIcon.Question
@@ -38,12 +55,59 @@ namespace KeyGenApp
 
                 if (result == DialogResult.Yes)
                 {
-                    textBox2.Text = Path.Combine(list[0], folder);
+                    usbPath += drives[0];
+                    textBox2.Text = Path.Combine(usbPath, folder);
                 }
             }
-            else if (list.Count > 1)
+            else if (drives.Count > 1)
             {
+                var dialog = new Form2(drives);
 
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    if (dialog.drive != null)
+                    {
+                        usbPath += dialog.drive;
+                        textBox2.Text = Path.Combine(usbPath, folder);
+                    }
+                }
+
+                dialog.Dispose();
+            }
+        }
+
+        void CheckIfDeviceMissing()
+        {
+            if (!Directory.Exists(usbPath))
+            {
+                MessageBox.Show(
+                    $"Pendrive: {usbPath}, zosta³ od³¹czony.",
+                    "Urz¹dzenie od³aczone!!!",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+
+                usbPath = "";
+                textBox2.Text = defaultPath;
+            }
+        }
+
+        // Wykrywanie eventów pod³¹czenia i od³¹czenia pendrive'ów
+        protected override void WndProc(ref Message m)
+        {
+            base.WndProc(ref m);
+
+            if (m.Msg == WM_DEVICECHANGE)
+            {
+                switch ((int)m.WParam)
+                {
+                    case DBT_DEVICEARRIVAL:
+                        CheckForPendrives();
+                        break;
+
+                    case DBT_DEVICEREMOVECOMPLETE:
+                        CheckIfDeviceMissing();
+                        break;
+                }
             }
         }
 
@@ -133,6 +197,7 @@ namespace KeyGenApp
             }
         }
 
+        // Detekcja pendrive'ów przy sracie aplikacji
         private void Form1_Shown(object sender, EventArgs e)
         {
             CheckForPendrives();
