@@ -71,5 +71,15 @@ namespace MainApp
             }
             label4.Text = fileName;
         }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            label2.Text = string.Empty;
+            label4.Text = string.Empty;
+            label6.Text = string.Empty;
+            label9.Text = string.Empty;
+            label11.Text = string.Empty;
+            label13.Text = string.Empty;
+        }
     }
 }
