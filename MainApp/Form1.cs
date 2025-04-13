@@ -19,12 +19,33 @@ namespace MainApp
         static string vectorName = "iv.bin";
 
         // Obs³uga w³¹czenia i wy³¹czenia przycisku
-        void CheckUnlockButton(Button btn, bool pinCorrect, string usb)
+        void CheckUnlockButton()
         {
-            if (pinCorrect && usb.Length > 0)
-                btn.Enabled = true;
-            else
-                btn.Enabled = false;
+            bool unlockA = false;
+            bool unlockB = false;
+            // Sprawdzenie istnienia pliku pdf
+            if (File.Exists(textBox4.Text))
+            {
+                // Sprawdzenie istnienia pendrive'a
+                if (textBox2.Text.Length > 0)
+                {
+                    // Sprawdzenie czy pin jest poprawny (schemat)
+                    if (Regex.IsMatch(textBox1.Text, @"^\d{4}$"))
+                        unlockA = true;
+                    
+                }
+            }
+
+            // Sprawdzenie istnienia pliku pdf
+            if (File.Exists(textBox5.Text))
+            {
+                // Sprawdzenie istnienia pendrive'a
+                if (textBox3.Text.Length > 0)
+                    unlockB = true;
+            }
+
+            button4.Enabled = unlockA;
+            button8.Enabled = unlockB;
         }
 
         // Zebranie dostêpnych pendrive'ów z formatem FAT32
@@ -59,12 +80,10 @@ namespace MainApp
             if (tabControl1.SelectedIndex == 0)
             {
                 textBox2.Text = path;
-                button4.Enabled = true;
             }
             else
             {
                 textBox3.Text = path;
-                button8.Enabled = true;
             }
         }
 
@@ -101,6 +120,7 @@ namespace MainApp
 
                 dialog.Dispose();
             }
+            CheckUnlockButton();
         }
 
         // Obs³uga usuniêcia pendrive'a
@@ -129,6 +149,7 @@ namespace MainApp
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
             }
+            CheckUnlockButton();
         }
 
         // Wykrywanie eventów pod³¹czenia i od³¹czenia pendrive'ów
@@ -194,6 +215,7 @@ namespace MainApp
                 else
                     textBox5.Text = openFileDialog.FileName;
             }
+            CheckUnlockButton();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -204,18 +226,26 @@ namespace MainApp
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-            bool correct = Regex.IsMatch(textBox1.Text, @"^\d{4}$");
-            if (correct)
+            if (Regex.IsMatch(textBox1.Text, @"^\d{4}$"))
                 panel1.BackColor = Color.Gray;
             else
                 panel1.BackColor = Color.Red;
 
-            CheckUnlockButton(button4, correct, textBox2.Text);
+            CheckUnlockButton();
         }
 
         private void Form1_Shown(object sender, EventArgs e)
         {
             CheckForPendrives();
+        }
+
+        private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true;
+            }
+            CheckUnlockButton();
         }
     }
 }

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("KeyGenApp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+da3a569a88360e71c48a7c2a49010becff455aa9")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cf90dc3cda0119be8a505f26a5bb95a2e70683b8")]
 [assembly: System.Reflection.AssemblyProductAttribute("KeyGenApp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("KeyGenApp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -97,6 +97,7 @@
             textBox1.Size = new Size(75, 23);
             textBox1.TabIndex = 10;
             textBox1.TextChanged += textBox1_TextChanged;
+            textBox1.KeyPress += textBox1_KeyPress;
             // 
             // button4
             // 
