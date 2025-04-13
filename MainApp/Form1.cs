@@ -1,4 +1,5 @@
 using KeyGenApp;
+using System.Numerics;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -33,7 +34,7 @@ namespace MainApp
                     // Sprawdzenie czy pin jest poprawny (schemat)
                     if (Regex.IsMatch(textBox1.Text, @"^\d{4}$"))
                         unlockA = true;
-                    
+
                 }
             }
 
@@ -195,6 +196,11 @@ namespace MainApp
             InitializeComponent();
         }
 
+        void SignPDFwithRSA(RSA rsa)
+        {
+            
+        }
+
         // Podpisywanie pliku
         private void button4_Click(object sender, EventArgs e)
         {
@@ -207,7 +213,7 @@ namespace MainApp
             byte[] encryptedPrivateKey = File.ReadAllBytes(Path.Combine(textBox2.Text, folder, ppkName));
 
             // tworzenie klucza aes
-            System.Security.Cryptography.Aes aes = System.Security.Cryptography.Aes.Create();
+            Aes aes = Aes.Create();
             aes.Key = aesKey;
             aes.IV = iv;
 
@@ -215,8 +221,26 @@ namespace MainApp
             MemoryStream ms = new MemoryStream(encryptedPrivateKey);
             CryptoStream cs = new CryptoStream(ms, aes.CreateDecryptor(), CryptoStreamMode.Read);
             using MemoryStream decryptedMs = new MemoryStream();
-            cs.CopyTo(decryptedMs);
-            byte[] privateKeyBytes = decryptedMs.ToArray();
+            byte[] privateKeyBytes = null;
+            try
+            {
+                cs.CopyTo(decryptedMs);
+                privateKeyBytes = decryptedMs.ToArray();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Nieprawid³owy pin!!!", "B³¹d dekrypcji klucza!!!",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // Generacja pliku podpisu
+            using RSA rsa = RSA.Create();
+            rsa.ImportRSAPrivateKey(privateKeyBytes, out _);
+
+            string outputPath = Path.ChangeExtension(textBox4.Text, ".signed.pdf");
+
+
             MessageBox.Show("Plik zosta³ podpisany");
         }
 
@@ -268,6 +292,11 @@ namespace MainApp
                 e.Handled = true;
             }
             CheckUnlockButton();
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

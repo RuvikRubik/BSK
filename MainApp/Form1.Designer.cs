@@ -215,6 +215,7 @@
             button8.TabIndex = 9;
             button8.Text = "Zweryfikuj podpis";
             button8.UseVisualStyleBackColor = true;
+            button8.Click += button8_Click;
             // 
             // label10
             // 
