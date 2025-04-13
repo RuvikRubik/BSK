@@ -12,13 +12,14 @@ namespace MainApp
         private const int WM_DEVICECHANGE = 0x0219;
         private const int DBT_DEVICEARRIVAL = 0x8000;
         private const int DBT_DEVICEREMOVECOMPLETE = 0x8004;
-        // œcie¿ka d pendrive'a
+
+        // Sta³e opisuj¹ce nazwy plików i folderów
         static string folder = "Klucze";
         static string pubKeyName = "publicKey.bin";
         static string ppkName = "privateKey.enc";
         static string vectorName = "iv.bin";
 
-        // Obs³uga w³¹czenia i wy³¹czenia przycisku
+        // Obs³uga w³¹czenia i wy³¹czenia przycisków
         void CheckUnlockButton()
         {
             bool unlockA = false;
@@ -65,7 +66,21 @@ namespace MainApp
                         string tmp = drive.RootDirectory.FullName;
                         if (Directory.Exists(Path.Combine(tmp, folder)))
                         {
-                            list.Add(drive.RootDirectory.FullName);
+                            // Sprawdzenie, czy pendrive jest poprawny dla aktualnego u¿ytkownika
+                            if (tabControl1.SelectedIndex == 0)
+                            {
+                                string pathToPpk = Path.Combine(tmp, folder, ppkName);
+                                string pathToVec = Path.Combine(tmp, folder, vectorName);
+
+                                if (File.Exists(pathToPpk) && File.Exists(pathToVec))
+                                    list.Add(tmp);
+                            }
+                            else
+                            {
+                                string pathToPubk = Path.Combine(tmp, folder, pubKeyName);
+                                if (File.Exists(pathToPubk))
+                                    list.Add(tmp);
+                            }
                         }
                     }
                 }
@@ -77,14 +92,17 @@ namespace MainApp
         // Reaguja na wykrycie w³aœciwego pendrive'a
         void AddDetectedDrive(string path)
         {
-            if (tabControl1.SelectedIndex == 0)
-            {
+            string pathToPpk = Path.Combine(path, folder, ppkName);
+            string pathToVec = Path.Combine(path, folder, vectorName);
+            string pathToPubk = Path.Combine(path, folder, pubKeyName);
+
+            if (File.Exists(pathToPpk) && File.Exists(pathToVec))
                 textBox2.Text = path;
-            }
-            else
-            {
+
+            if (File.Exists(pathToPubk))
                 textBox3.Text = path;
-            }
+
+            CheckUnlockButton();
         }
 
         // Wykrywanie ju¿ pod³¹czonych Pendrive'ów
@@ -95,7 +113,7 @@ namespace MainApp
             if (drives.Count == 1)
             {
                 var result = MessageBox.Show(
-                    $"Wykryto pendrive: {drives[0]} \nCzy chcesz skorzystaæ z zawrtych w nim kluczy?",
+                    $"Wykryto pendrive: {drives[0]} \nCzy chcesz skorzystaæ z zawartych w nim kluczy?",
                     "Wykryto pendrive",
                     MessageBoxButtons.YesNo,
                     MessageBoxIcon.Question
@@ -218,12 +236,14 @@ namespace MainApp
             CheckUnlockButton();
         }
 
+        // Inicjalna blokada przycisków
         private void Form1_Load(object sender, EventArgs e)
         {
             button4.Enabled = false;
             button8.Enabled = false;
         }
 
+        // Sprawdzenie poprawnoœci pinu
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             if (Regex.IsMatch(textBox1.Text, @"^\d{4}$"))
@@ -234,11 +254,13 @@ namespace MainApp
             CheckUnlockButton();
         }
 
+        // Wykrywanie pendrive'ów po starcie aplikacji
         private void Form1_Shown(object sender, EventArgs e)
         {
             CheckForPendrives();
         }
 
+        // Zabronienie wpisania znaków innych ni¿ liczb
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
