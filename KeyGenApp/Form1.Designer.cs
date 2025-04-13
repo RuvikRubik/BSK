@@ -41,7 +41,7 @@
             // 
             // button1
             // 
-            button1.Location = new Point(12, 56);
+            button1.Location = new Point(12, 67);
             button1.Name = "button1";
             button1.Size = new Size(110, 23);
             button1.TabIndex = 0;
@@ -90,7 +90,7 @@
             // 
             // button3
             // 
-            button3.Location = new Point(128, 56);
+            button3.Location = new Point(128, 67);
             button3.Name = "button3";
             button3.Size = new Size(170, 23);
             button3.TabIndex = 6;
@@ -110,14 +110,15 @@
             // 
             // textBox2
             // 
+            textBox2.BorderStyle = BorderStyle.None;
             textBox2.Location = new Point(12, 27);
+            textBox2.Multiline = true;
             textBox2.Name = "textBox2";
             textBox2.ReadOnly = true;
             textBox2.ScrollBars = ScrollBars.Horizontal;
-            textBox2.Size = new Size(286, 23);
+            textBox2.Size = new Size(286, 34);
             textBox2.TabIndex = 8;
             textBox2.WordWrap = false;
-            textBox2.TextChanged += textBox2_TextChanged;
             // 
             // Form1
             // 

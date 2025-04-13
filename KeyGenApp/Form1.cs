@@ -21,7 +21,7 @@ namespace KeyGenApp
             FolderBrowserDialog folderBrowserDialog1 = new FolderBrowserDialog();
             if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
             {
-                label1.Text = Path.Combine(folderBrowserDialog1.SelectedPath, "Klucze");
+                textBox2.Text = Path.Combine(folderBrowserDialog1.SelectedPath, "Klucze");
             }
         }
 
@@ -94,11 +94,6 @@ namespace KeyGenApp
             {
                 e.Handled = true;
             }
-        }
-
-        private void textBox2_TextChanged(object sender, EventArgs e)
-        {
-
         }
     }
 }
