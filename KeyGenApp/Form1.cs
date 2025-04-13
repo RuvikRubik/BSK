@@ -1,14 +1,51 @@
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.IO;
 
 namespace KeyGenApp
 {
     public partial class Form1 : Form
     {
         // Podstawowa œcie¿ka generacji kluczy
+        static string folder = "Klucze";
         string defaultPath = Path.Combine(Environment.GetFolderPath(
-            Environment.SpecialFolder.MyDocuments), "Klucze");
+            Environment.SpecialFolder.MyDocuments), folder);
+
+        void CheckForPendrives()
+        {
+            List<string> list = new List<string>();
+
+            foreach (DriveInfo drive in DriveInfo.GetDrives())
+            {
+                if (drive.DriveType == DriveType.Removable && drive.IsReady)
+                {
+                    if (drive.DriveFormat.Equals("FAT32", StringComparison.OrdinalIgnoreCase))
+                    {
+                        list.Add(drive.RootDirectory.FullName);            
+                    }
+                }
+            }
+
+            if (list.Count == 1)
+            {
+                var result = MessageBox.Show(
+                    $"Wykryto pendrive: {list[0]} \nCzy chcesz w nim zapisaæ wygenerowane klucze?",
+                    "Wykryto pendrive",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question
+                    );
+
+                if (result == DialogResult.Yes)
+                {
+                    textBox2.Text = Path.Combine(list[0], folder);
+                }
+            }
+            else if (list.Count > 1)
+            {
+
+            }
+        }
 
         public Form1()
         {
@@ -21,7 +58,7 @@ namespace KeyGenApp
             FolderBrowserDialog folderBrowserDialog1 = new FolderBrowserDialog();
             if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
             {
-                textBox2.Text = Path.Combine(folderBrowserDialog1.SelectedPath, "Klucze");
+                textBox2.Text = Path.Combine(folderBrowserDialog1.SelectedPath, folder);
             }
         }
 
@@ -79,6 +116,7 @@ namespace KeyGenApp
         {
             textBox2.Text = defaultPath;
             button2.Enabled = false;
+            CheckForPendrives();
         }
 
         // Powrót do podstawowej œcie¿ki zapisu
