@@ -6,7 +6,9 @@ namespace KeyGenApp
 {
     public partial class Form1 : Form
     {
-        string defaultPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Klucze");
+        // Podstawowa œcie¿ka generacji kluczy
+        string defaultPath = Path.Combine(Environment.GetFolderPath(
+            Environment.SpecialFolder.MyDocuments), "Klucze");
 
         public Form1()
         {
@@ -26,7 +28,7 @@ namespace KeyGenApp
         // wygenerowanie kluczy i zapis
         private void button2_Click(object sender, EventArgs e)
         {
-            Directory.CreateDirectory(label2.Text);
+            Directory.CreateDirectory(textBox2.Text);
             // wygenerowanie kluczy o d³ugoœci 4096
             RSA rsa = RSA.Create(4096);
             byte[] privateKeyBytes = rsa.ExportRSAPrivateKey();
@@ -47,18 +49,19 @@ namespace KeyGenApp
             byte[] encryptedPrivateKey = ms.ToArray();
 
             // zapis do pliku
-            File.WriteAllBytes(label2.Text + "\\privateKey.enc", encryptedPrivateKey);
-            File.WriteAllBytes(label2.Text + "\\publicKey.bin", publicKeyBytes);
-            File.WriteAllBytes(label2.Text + "\\iv.bin", iv);
+            File.WriteAllBytes(textBox2.Text + "\\privateKey.enc", encryptedPrivateKey);
+            File.WriteAllBytes(textBox2.Text + "\\publicKey.bin", publicKeyBytes);
+            File.WriteAllBytes(textBox2.Text + "\\iv.bin", iv);
 
             MessageBox.Show("Klucze zapisane poprawnie!");
         }
 
+        // Wizualny feedback co do wpisanego pinu
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             string text = textBox1.Text;
 
-            if(Regex.IsMatch(text, @"^\d{4}$"))
+            if (Regex.IsMatch(text, @"^\d{4}$"))
             {
                 panel1.BackColor = Color.Gray;
                 button2.Enabled = true;
@@ -70,24 +73,32 @@ namespace KeyGenApp
             }
         }
 
+        // Blokowanie generacji kluczy od razu po w³¹czeniu aplikacji
+        // i wyœwietlenie podstawowej œcie¿ki zapisu
         private void Form1_Load(object sender, EventArgs e)
         {
-            label2.Text = defaultPath;
+            textBox2.Text = defaultPath;
             button2.Enabled = false;
         }
 
         // Powrót do podstawowej œcie¿ki zapisu
         private void button3_Click(object sender, EventArgs e)
         {
-            label2.Text = defaultPath;
+            textBox2.Text = defaultPath;
         }
 
+        // Blokowaniu mo¿liwoœci wpisanie znaków innych ni¿ liczb w pole pinu
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
             {
                 e.Handled = true;
             }
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -31,17 +31,17 @@
             button1 = new Button();
             label1 = new Label();
             button2 = new Button();
-            label2 = new Label();
             textBox1 = new TextBox();
             label3 = new Label();
             button3 = new Button();
             panel1 = new Panel();
+            textBox2 = new TextBox();
             panel1.SuspendLayout();
             SuspendLayout();
             // 
             // button1
             // 
-            button1.Location = new Point(12, 42);
+            button1.Location = new Point(12, 56);
             button1.Name = "button1";
             button1.Size = new Size(110, 23);
             button1.TabIndex = 0;
@@ -60,22 +60,13 @@
             // 
             // button2
             // 
-            button2.Location = new Point(128, 122);
+            button2.Location = new Point(128, 140);
             button2.Name = "button2";
             button2.Size = new Size(141, 23);
             button2.TabIndex = 2;
             button2.Text = "Wygeneruj klucze";
             button2.UseVisualStyleBackColor = true;
             button2.Click += button2_Click;
-            // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.Location = new Point(12, 24);
-            label2.Name = "label2";
-            label2.Size = new Size(38, 15);
-            label2.TabIndex = 3;
-            label2.Text = "label2";
             // 
             // textBox1
             // 
@@ -91,7 +82,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(12, 96);
+            label3.Location = new Point(12, 114);
             label3.Name = "label3";
             label3.Size = new Size(112, 15);
             label3.TabIndex = 5;
@@ -99,7 +90,7 @@
             // 
             // button3
             // 
-            button3.Location = new Point(128, 42);
+            button3.Location = new Point(128, 56);
             button3.Name = "button3";
             button3.Size = new Size(170, 23);
             button3.TabIndex = 6;
@@ -110,22 +101,33 @@
             // panel1
             // 
             panel1.Controls.Add(textBox1);
-            panel1.Location = new Point(129, 92);
+            panel1.Location = new Point(129, 110);
             panel1.Margin = new Padding(2);
             panel1.Name = "panel1";
             panel1.Padding = new Padding(2);
             panel1.Size = new Size(140, 24);
             panel1.TabIndex = 7;
             // 
+            // textBox2
+            // 
+            textBox2.Location = new Point(12, 27);
+            textBox2.Name = "textBox2";
+            textBox2.ReadOnly = true;
+            textBox2.ScrollBars = ScrollBars.Horizontal;
+            textBox2.Size = new Size(286, 23);
+            textBox2.TabIndex = 8;
+            textBox2.WordWrap = false;
+            textBox2.TextChanged += textBox2_TextChanged;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(327, 175);
+            Controls.Add(textBox2);
             Controls.Add(panel1);
             Controls.Add(button3);
             Controls.Add(label3);
-            Controls.Add(label2);
             Controls.Add(button2);
             Controls.Add(label1);
             Controls.Add(button1);
@@ -143,10 +145,10 @@
         private Button button1;
         private Label label1;
         private Button button2;
-        private Label label2;
         private TextBox textBox1;
         private Label label3;
         private Button button3;
         private Panel panel1;
+        private TextBox textBox2;
     }
 }
