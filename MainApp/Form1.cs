@@ -20,7 +20,9 @@ namespace MainApp
         static string ppkName = "privateKey.enc";
         static string vectorName = "iv.bin";
 
-        // Obs³uga w³¹czenia i wy³¹czenia przycisków
+        /// <summary>
+        /// Obs³uga w³¹czenia i wy³¹czenia przycisków
+        /// </summary>
         void CheckUnlockButton()
         {
             bool unlockA = false;
@@ -50,7 +52,10 @@ namespace MainApp
             button8.Enabled = unlockB;
         }
 
-        // Zebranie dostêpnych pendrive'ów z formatem FAT32
+        /// <summary>
+        /// Zebranie dostêpnych pendrive'ów z formatem FAT32
+        /// </summary>
+        /// <returns></returns>
         List<string> GetPendriveList()
         {
             List<string> list = new List<string>();
@@ -90,7 +95,10 @@ namespace MainApp
             return list;
         }
 
-        // Reaguja na wykrycie w³aœciwego pendrive'a
+        /// <summary>
+        /// Reaguja na wykrycie w³aœciwego pendrive'a
+        /// </summary>
+        /// <param name="path"></param>
         void AddDetectedDrive(string path)
         {
             string pathToPpk = Path.Combine(path, folder, ppkName);
@@ -106,7 +114,9 @@ namespace MainApp
             CheckUnlockButton();
         }
 
-        // Wykrywanie ju¿ pod³¹czonych Pendrive'ów
+        /// <summary>
+        /// Wykrywanie ju¿ pod³¹czonych Pendrive'ów
+        /// </summary>
         void CheckForPendrives()
         {
             List<string> drives = GetPendriveList();
@@ -142,7 +152,9 @@ namespace MainApp
             CheckUnlockButton();
         }
 
-        // Obs³uga usuniêcia pendrive'a
+        /// <summary>
+        /// Obs³uga usuniêcia pendrive'a
+        /// </summary>
         void CheckIfDeviceMissing()
         {
             string usb = "";
@@ -171,7 +183,10 @@ namespace MainApp
             CheckUnlockButton();
         }
 
-        // Wykrywanie eventów pod³¹czenia i od³¹czenia pendrive'ów
+        /// <summary>
+        /// Wykrywanie eventów pod³¹czenia i od³¹czenia pendrive'ów
+        /// </summary>
+        /// <param name="m"></param>
         protected override void WndProc(ref Message m)
         {
             base.WndProc(ref m);
@@ -201,7 +216,11 @@ namespace MainApp
             
         }
 
-        // Podpisywanie pliku
+        /// <summary>
+        /// Podpisywanie pliku
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void button4_Click(object sender, EventArgs e)
         {
             // utworzenie klucza aes z pinu
@@ -244,7 +263,11 @@ namespace MainApp
             MessageBox.Show("Plik zosta³ podpisany");
         }
 
-        // Wybór pliku pdf do podpisu
+        /// <summary>
+        /// Wybór pliku pdf do podpisu
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void button1_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -260,14 +283,22 @@ namespace MainApp
             CheckUnlockButton();
         }
 
-        // Inicjalna blokada przycisków
+        /// <summary>
+        /// Inicjalna blokada przycisków
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Form1_Load(object sender, EventArgs e)
         {
             button4.Enabled = false;
             button8.Enabled = false;
         }
 
-        // Sprawdzenie poprawnoœci pinu
+        /// <summary>
+        /// Sprawdzenie poprawnoœci pinu
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             if (Regex.IsMatch(textBox1.Text, @"^\d{4}$"))
@@ -278,13 +309,21 @@ namespace MainApp
             CheckUnlockButton();
         }
 
-        // Wykrywanie pendrive'ów po starcie aplikacji
+        /// <summary>
+        /// Wykrywanie pendrive'ów po starcie aplikacji
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Form1_Shown(object sender, EventArgs e)
         {
             CheckForPendrives();
         }
 
-        // Zabronienie wpisania znaków innych ni¿ liczb
+        /// <summary>
+        /// Zabronienie wpisania znaków innych ni¿ liczb
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
@@ -294,6 +333,11 @@ namespace MainApp
             CheckUnlockButton();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void button8_Click(object sender, EventArgs e)
         {
 

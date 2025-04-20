@@ -19,6 +19,11 @@ namespace KeyGenApp
             comboBox1.Items.AddRange(drives.ToArray());
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void button1_Click(object sender, EventArgs e)
         {
             if (comboBox1.SelectedItem != null)
@@ -35,6 +40,11 @@ namespace KeyGenApp
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void button2_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;

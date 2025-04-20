@@ -22,7 +22,10 @@ namespace KeyGenApp
         string defaultPath = Path.Combine(Environment.GetFolderPath(
             Environment.SpecialFolder.MyDocuments), folder);
 
-        // Zebranie dostêpnych pendrive'ów z formatem FAT32
+        /// <summary>
+        /// Zebranie dostêpnych pendrive'ów z formatem FAT32
+        /// </summary>
+        /// <returns></returns>
         List<string> GetPendriveList()
         {
             List<string> list = new List<string>();
@@ -43,7 +46,9 @@ namespace KeyGenApp
             return list;
         }
 
-        // Wykrywanie ju¿ pod³¹czonych Pendrive'ów
+        /// <summary>
+        /// Wykrywanie ju¿ pod³¹czonych Pendrive'ów
+        /// </summary>
         void CheckForPendrives()
         {
             List<string> drives = GetPendriveList();
@@ -80,7 +85,9 @@ namespace KeyGenApp
             }
         }
 
-        // Obs³uga usuniêcia pendrive'a
+        /// <summary>
+        /// Obs³uga usuniêcia pendrive'a
+        /// </summary>
         void CheckIfDeviceMissing()
         {
             if (!Directory.Exists(usbPath))
@@ -96,7 +103,10 @@ namespace KeyGenApp
             }
         }
 
-        // Wykrywanie eventów pod³¹czenia i od³¹czenia pendrive'ów
+        /// <summary>
+        /// Wykrywanie eventów pod³¹czenia i od³¹czenia pendrive'ów
+        /// </summary>
+        /// <param name="m"></param>
         protected override void WndProc(ref Message m)
         {
             base.WndProc(ref m);
@@ -121,7 +131,11 @@ namespace KeyGenApp
             InitializeComponent();
         }
 
-        // wybranie œcie¿ki zapisu 
+        /// <summary>
+        /// wybranie œcie¿ki zapisu 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void button1_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog folderBrowserDialog1 = new FolderBrowserDialog();
@@ -131,7 +145,11 @@ namespace KeyGenApp
             }
         }
 
-        // wygenerowanie kluczy i zapis
+        /// <summary>
+        /// wygenerowanie kluczy i zapis
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void button2_Click(object sender, EventArgs e)
         {
             Directory.CreateDirectory(textBox2.Text);
@@ -162,7 +180,11 @@ namespace KeyGenApp
             MessageBox.Show("Klucze zapisane poprawnie!");
         }
 
-        // Wizualny feedback co do wpisanego pinu
+        /// <summary>
+        /// Wizualny feedback co do wpisanego pinu
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             string text = textBox1.Text;
@@ -179,21 +201,33 @@ namespace KeyGenApp
             }
         }
 
-        // Blokowanie generacji kluczy od razu po w³¹czeniu aplikacji
-        // i wyœwietlenie podstawowej œcie¿ki zapisu
+        /// <summary>
+        /// Blokowanie generacji kluczy od razu po w³¹czeniu aplikacji
+        /// i wyœwietlenie podstawowej œcie¿ki zapisu
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Form1_Load(object sender, EventArgs e)
         {
             textBox2.Text = defaultPath;
             button2.Enabled = false;
         }
 
-        // Powrót do podstawowej œcie¿ki zapisu
+        /// <summary>
+        /// Powrót do podstawowej œcie¿ki zapisu
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void button3_Click(object sender, EventArgs e)
         {
             textBox2.Text = defaultPath;
         }
 
-        // Blokowaniu mo¿liwoœci wpisanie znaków innych ni¿ liczb w pole pinu
+        /// <summary>
+        /// Blokowaniu mo¿liwoœci wpisanie znaków innych ni¿ liczb w pole pinu
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
@@ -202,7 +236,11 @@ namespace KeyGenApp
             }
         }
 
-        // Detekcja pendrive'ów przy sracie aplikacji
+        /// <summary>
+        /// Detekcja pendrive'ów przy sracie aplikacji
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Form1_Shown(object sender, EventArgs e)
         {
             CheckForPendrives();
