@@ -20,7 +20,7 @@ namespace KeyGenApp
         }
 
         /// <summary>
-        /// 
+        /// Zatwierdza wybór lub wyświetla dialog z ostrzeżeniem
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -41,7 +41,7 @@ namespace KeyGenApp
         }
 
         /// <summary>
-        /// 
+        /// Rezygnacja z wyboru i zamknięcie okna
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
