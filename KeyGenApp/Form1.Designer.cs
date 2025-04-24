@@ -1,4 +1,4 @@
-﻿namespace KeyGenApp
+namespace KeyGenApp
 {
     partial class Form1
     {

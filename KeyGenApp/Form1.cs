@@ -9,11 +9,11 @@ namespace KeyGenApp
 {
     public partial class Form1 : Form
     {
-        // kody zdarzeñ systemowych pod³¹czenia i od³¹czenia urz¹dzeñ
+        // kody zdarzeÅ„ systemowych podÅ‚Ä…czenia i odÅ‚Ä…czenia urzÄ…dzeÅ„
         private const int WM_DEVICECHANGE = 0x0219;
         private const int DBT_DEVICEARRIVAL = 0x8000;
         private const int DBT_DEVICEREMOVECOMPLETE = 0x8004;
-        // Podstawowa œcie¿ka generacji kluczy
+        // Podstawowa Å›cieÅ¼ka generacji kluczy
         static string folder = "Klucze";
         static string pubKeyName = "publicKey.bin";
         static string ppkName = "privateKey.enc";
@@ -23,7 +23,7 @@ namespace KeyGenApp
             Environment.SpecialFolder.MyDocuments), folder);
 
         /// <summary>
-        /// Zebranie dostêpnych pendrive'ów z formatem FAT32
+        /// Zebranie dostÄ™pnych pendrive'Ã³w z formatem FAT32
         /// </summary>
         /// <returns></returns>
         List<string> GetPendriveList()
@@ -32,7 +32,7 @@ namespace KeyGenApp
 
             foreach (DriveInfo drive in DriveInfo.GetDrives())
             {
-                // Sprawdzenie czy s¹ dostêpne pendrive'y
+                // Sprawdzenie czy sÄ… dostÄ™pne pendrive'y
                 if (drive.DriveType == DriveType.Removable && drive.IsReady)
                 {
                     // Sprawdzenie czy ich format jest FAT32
@@ -47,7 +47,7 @@ namespace KeyGenApp
         }
 
         /// <summary>
-        /// Wykrywanie ju¿ pod³¹czonych Pendrive'ów
+        /// Wykrywanie juÅ¼ podÅ‚Ä…czonych Pendrive'Ã³w
         /// </summary>
         void CheckForPendrives()
         {
@@ -56,7 +56,7 @@ namespace KeyGenApp
             if (drives.Count == 1)
             {
                 var result = MessageBox.Show(
-                    $"Wykryto pendrive: {drives[0]} \nCzy chcesz w nim zapisaæ wygenerowane klucze?",
+                    $"Wykryto pendrive: {drives[0]} \nCzy chcesz w nim zapisaÄ‡ wygenerowane klucze?",
                     "Wykryto pendrive",
                     MessageBoxButtons.YesNo,
                     MessageBoxIcon.Question
@@ -86,15 +86,15 @@ namespace KeyGenApp
         }
 
         /// <summary>
-        /// Obs³uga usuniêcia pendrive'a
+        /// ObsÅ‚uga usuniÄ™cia pendrive'a
         /// </summary>
         void CheckIfDeviceMissing()
         {
             if (!Directory.Exists(usbPath))
             {
                 MessageBox.Show(
-                    $"Pendrive: {usbPath}, zosta³ od³¹czony.",
-                    "Urz¹dzenie od³aczone!!!",
+                    $"Pendrive: {usbPath}, zostaÅ‚ odÅ‚Ä…czony.",
+                    "UrzÄ…dzenie odÅ‚aczone!!!",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
 
@@ -104,7 +104,7 @@ namespace KeyGenApp
         }
 
         /// <summary>
-        /// Wykrywanie eventów pod³¹czenia i od³¹czenia pendrive'ów
+        /// Wykrywanie eventÃ³w podÅ‚Ä…czenia i odÅ‚Ä…czenia pendrive'Ã³w
         /// </summary>
         /// <param name="m"></param>
         protected override void WndProc(ref Message m)
@@ -132,7 +132,7 @@ namespace KeyGenApp
         }
 
         /// <summary>
-        /// wybranie œcie¿ki zapisu 
+        /// wybranie Å›cieÅ¼ki zapisu 
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -153,7 +153,7 @@ namespace KeyGenApp
         private void button2_Click(object sender, EventArgs e)
         {
             Directory.CreateDirectory(textBox2.Text);
-            // wygenerowanie kluczy o d³ugoœci 4096
+            // wygenerowanie kluczy o dÅ‚ugoÅ›ci 4096
             RSA rsa = RSA.Create(4096);
             byte[] privateKeyBytes = rsa.ExportRSAPrivateKey();
             byte[] publicKeyBytes = rsa.ExportRSAPublicKey();
@@ -202,8 +202,8 @@ namespace KeyGenApp
         }
 
         /// <summary>
-        /// Blokowanie generacji kluczy od razu po w³¹czeniu aplikacji
-        /// i wyœwietlenie podstawowej œcie¿ki zapisu
+        /// Blokowanie generacji kluczy od razu po wÅ‚Ä…czeniu aplikacji
+        /// i wyÅ›wietlenie podstawowej Å›cieÅ¼ki zapisu
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -214,7 +214,7 @@ namespace KeyGenApp
         }
 
         /// <summary>
-        /// Powrót do podstawowej œcie¿ki zapisu
+        /// PowrÃ³t do podstawowej Å›cieÅ¼ki zapisu
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -224,7 +224,7 @@ namespace KeyGenApp
         }
 
         /// <summary>
-        /// Blokowaniu mo¿liwoœci wpisanie znaków innych ni¿ liczb w pole pinu
+        /// Blokowaniu moÅ¼liwoÅ›ci wpisania znakÃ³w innych niÅ¼ liczb w pole pinu
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -237,7 +237,7 @@ namespace KeyGenApp
         }
 
         /// <summary>
-        /// Detekcja pendrive'ów przy sracie aplikacji
+        /// Detekcja pendrive'Ã³w przy sracie aplikacji
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>

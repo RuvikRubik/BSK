@@ -22,3 +22,5 @@ C:\Users\sigmo\source\repos\BSK\MainApp\bin\Debug\net8.0-windows\KeyGenApp.dll
 C:\Users\sigmo\source\repos\BSK\MainApp\bin\Debug\net8.0-windows\KeyGenApp.pdb
 C:\Users\sigmo\source\repos\BSK\MainApp\obj\Debug\net8.0-windows\MainApp.csproj.AssemblyReference.cache
 C:\Users\sigmo\source\repos\BSK\MainApp\obj\Debug\net8.0-windows\MainApp.csproj.Up2Date
+C:\Users\sigmo\source\repos\BSK\MainApp\bin\Debug\net8.0-windows\MainApp.xml
+C:\Users\sigmo\source\repos\BSK\MainApp\bin\Debug\net8.0-windows\KeyGenApp.xml

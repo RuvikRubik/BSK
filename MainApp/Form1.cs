@@ -9,19 +9,19 @@ namespace MainApp
 {
     public partial class Form1 : Form
     {
-        // kody zdarzeñ systemowych pod³¹czenia i od³¹czenia urz¹dzeñ
+        // kody zdarzeÅ„ systemowych podÅ‚Ä…czenia i odÅ‚Ä…czenia urzÄ…dzeÅ„
         private const int WM_DEVICECHANGE = 0x0219;
         private const int DBT_DEVICEARRIVAL = 0x8000;
         private const int DBT_DEVICEREMOVECOMPLETE = 0x8004;
 
-        // Sta³e opisuj¹ce nazwy plików i folderów
+        // StaÅ‚e opisujÄ…ce nazwy plikÃ³w i folderÃ³w
         static string folder = "Klucze";
         static string pubKeyName = "publicKey.bin";
         static string ppkName = "privateKey.enc";
         static string vectorName = "iv.bin";
 
         /// <summary>
-        /// Obs³uga w³¹czenia i wy³¹czenia przycisków
+        /// ObsÅ‚uga wÅ‚Ä…czenia i wyÅ‚Ä…czenia przyciskÃ³w
         /// </summary>
         void CheckUnlockButton()
         {
@@ -53,7 +53,7 @@ namespace MainApp
         }
 
         /// <summary>
-        /// Zebranie dostêpnych pendrive'ów z formatem FAT32
+        /// Zebranie dostÄ™pnych pendrive'Ã³w z formatem FAT32
         /// </summary>
         /// <returns></returns>
         List<string> GetPendriveList()
@@ -62,7 +62,7 @@ namespace MainApp
 
             foreach (DriveInfo drive in DriveInfo.GetDrives())
             {
-                // Sprawdzenie czy s¹ dostêpne pendrive'y
+                // Sprawdzenie czy sÄ… dostÄ™pne pendrive'y
                 if (drive.DriveType == DriveType.Removable && drive.IsReady)
                 {
                     // Sprawdzenie czy ich format jest FAT32
@@ -72,7 +72,7 @@ namespace MainApp
                         string tmp = drive.RootDirectory.FullName;
                         if (Directory.Exists(Path.Combine(tmp, folder)))
                         {
-                            // Sprawdzenie, czy pendrive jest poprawny dla aktualnego u¿ytkownika
+                            // Sprawdzenie, czy pendrive jest poprawny dla aktualnego uÅ¼ytkownika
                             if (tabControl1.SelectedIndex == 0)
                             {
                                 string pathToPpk = Path.Combine(tmp, folder, ppkName);
@@ -96,7 +96,7 @@ namespace MainApp
         }
 
         /// <summary>
-        /// Reaguja na wykrycie w³aœciwego pendrive'a
+        /// Reaguja na wykrycie wÅ‚aÅ›ciwego pendrive'a
         /// </summary>
         /// <param name="path"></param>
         void AddDetectedDrive(string path)
@@ -115,7 +115,7 @@ namespace MainApp
         }
 
         /// <summary>
-        /// Wykrywanie ju¿ pod³¹czonych Pendrive'ów
+        /// Wykrywanie juÅ¼ podÅ‚Ä…czonych Pendrive'Ã³w
         /// </summary>
         void CheckForPendrives()
         {
@@ -124,7 +124,7 @@ namespace MainApp
             if (drives.Count == 1)
             {
                 var result = MessageBox.Show(
-                    $"Wykryto pendrive: {drives[0]} \nCzy chcesz skorzystaæ z zawartych w nim kluczy?",
+                    $"Wykryto pendrive: {drives[0]} \nCzy chcesz skorzystaÄ‡ z zawartych w nim kluczy?",
                     "Wykryto pendrive",
                     MessageBoxButtons.YesNo,
                     MessageBoxIcon.Question
@@ -153,7 +153,7 @@ namespace MainApp
         }
 
         /// <summary>
-        /// Obs³uga usuniêcia pendrive'a
+        /// ObsÅ‚uga usuniÄ™cia pendrive'a
         /// </summary>
         void CheckIfDeviceMissing()
         {
@@ -175,8 +175,8 @@ namespace MainApp
             if (!Directory.Exists(usb) && usb.Length > 0)
             {
                 MessageBox.Show(
-                    $"Pendrive: {usb}, zosta³ od³¹czony.",
-                    "Urz¹dzenie od³aczone!!!",
+                    $"Pendrive: {usb}, zostaÅ‚ odÅ‚Ä…czony.",
+                    "UrzÄ…dzenie odÅ‚aczone!!!",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
             }
@@ -184,7 +184,7 @@ namespace MainApp
         }
 
         /// <summary>
-        /// Wykrywanie eventów pod³¹czenia i od³¹czenia pendrive'ów
+        /// Wykrywanie eventÃ³w podÅ‚Ä…czenia i odÅ‚Ä…czenia pendrive'Ã³w
         /// </summary>
         /// <param name="m"></param>
         protected override void WndProc(ref Message m)
@@ -248,7 +248,7 @@ namespace MainApp
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Nieprawid³owy pin!!!", "B³¹d dekrypcji klucza!!!",
+                MessageBox.Show("NieprawidÅ‚owy pin!!!", "BÅ‚Ä…d dekrypcji klucza!!!",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
@@ -260,11 +260,11 @@ namespace MainApp
             string outputPath = Path.ChangeExtension(textBox4.Text, ".signed.pdf");
 
 
-            MessageBox.Show("Plik zosta³ podpisany");
+            MessageBox.Show("Plik zostaÅ‚ podpisany");
         }
 
         /// <summary>
-        /// Wybór pliku pdf do podpisu
+        /// WybÃ³r pliku pdf do podpisu
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -284,7 +284,7 @@ namespace MainApp
         }
 
         /// <summary>
-        /// Inicjalna blokada przycisków
+        /// Inicjalna blokada przyciskÃ³w
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -295,7 +295,7 @@ namespace MainApp
         }
 
         /// <summary>
-        /// Sprawdzenie poprawnoœci pinu
+        /// Sprawdzenie poprawnoÅ›ci pinu
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -310,7 +310,7 @@ namespace MainApp
         }
 
         /// <summary>
-        /// Wykrywanie pendrive'ów po starcie aplikacji
+        /// Wykrywanie pendrive'Ã³w po starcie aplikacji
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -320,7 +320,7 @@ namespace MainApp
         }
 
         /// <summary>
-        /// Zabronienie wpisania znaków innych ni¿ liczb
+        /// Zabronienie wpisania znakÃ³w innych niÅ¼ liczb
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
