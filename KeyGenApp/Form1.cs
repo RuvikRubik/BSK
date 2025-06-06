@@ -13,16 +13,19 @@ namespace KeyGenApp
         private const int DBT_DEVICEARRIVAL = 0x8000;
         private const int DBT_DEVICEREMOVECOMPLETE = 0x8004;
 
-        string utilPath = Path.Combine(Environment.GetFolderPath(
-            Environment.SpecialFolder.MyDocuments), "Utils");
-        // Podstawowa ścieżka generacji kluczy
-        static string folder = "Klucze";
-        static string pubKeyName = "publicKey.bin";
-        static string ppkName = "privateKey.enc";
-        static string vectorName = "iv.bin";
+        // Nazwy plików potrzebne do generacji kluczy
+        static readonly string folder = "Klucze";
+        static readonly string pubKeyName = "publicKey.bin";
+        static readonly string ppkName = "privateKey.enc";
+        static readonly string vectorName = "iv.bin";
+        static readonly string certName = "cert1.cer";
+
+        // Ścieżki
         string usbPath = "";
-        string defaultPath = Path.Combine(Environment.GetFolderPath(
+        readonly string defaultPath = Path.Combine(Environment.GetFolderPath(
             Environment.SpecialFolder.MyDocuments), folder);
+        readonly string utilPath = Path.Combine(Environment.GetFolderPath(
+            Environment.SpecialFolder.MyDocuments), "Utils");
 
         /// <summary>
         /// Zebranie dostępnych pendrive'ów z formatem FAT32
@@ -188,7 +191,7 @@ namespace KeyGenApp
             // zapis do pliku
             File.WriteAllBytes(Path.Combine(textBox2.Text, ppkName), encryptedPrivateKey);
             File.WriteAllBytes(Path.Combine(utilPath, pubKeyName), publicKeyBytes);
-            File.WriteAllBytes(Path.Combine(utilPath, "cert1.cer"), cert.Export(X509ContentType.Cert));
+            File.WriteAllBytes(Path.Combine(utilPath, certName), cert.Export(X509ContentType.Cert));
             File.WriteAllBytes(Path.Combine(utilPath, vectorName), iv);
 
             MessageBox.Show("Klucze zapisane poprawnie!");

@@ -14,13 +14,16 @@ namespace MainApp
         private const int DBT_DEVICEARRIVAL = 0x8000;
         private const int DBT_DEVICEREMOVECOMPLETE = 0x8004;
 
-        // Stałe opisujące nazwy plików i folderów
-        string utilPath = Path.Combine(Environment.GetFolderPath(
+        // Nazwy potrzebnych plików i folderu
+        static readonly string folder = "Klucze";
+        static readonly string pubKeyName = "publicKey.bin";
+        static readonly string ppkName = "privateKey.enc";
+        static readonly string vectorName = "iv.bin";
+        static readonly string certName = "cert1.cer";
+
+        // Ścieżka do wspólnego folderu z kluczem publicznym, IV i certyfikatem
+        readonly string utilPath = Path.Combine(Environment.GetFolderPath(
             Environment.SpecialFolder.MyDocuments), "Utils");
-        static string folder = "Klucze";
-        static string pubKeyName = "publicKey.bin";
-        static string ppkName = "privateKey.enc";
-        static string vectorName = "iv.bin";
 
         /// <summary>
         /// Obsługa włączenia i wyłączenia przycisków
