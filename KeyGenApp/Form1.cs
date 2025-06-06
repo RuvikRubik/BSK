@@ -1,9 +1,8 @@
 using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.IO;
-using System.DirectoryServices;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
+
 
 namespace KeyGenApp
 {
@@ -13,6 +12,9 @@ namespace KeyGenApp
         private const int WM_DEVICECHANGE = 0x0219;
         private const int DBT_DEVICEARRIVAL = 0x8000;
         private const int DBT_DEVICEREMOVECOMPLETE = 0x8004;
+
+        string utilPath = Path.Combine(Environment.GetFolderPath(
+            Environment.SpecialFolder.MyDocuments), "Utils");
         // Podstawowa ścieżka generacji kluczy
         static string folder = "Klucze";
         static string pubKeyName = "publicKey.bin";
@@ -153,6 +155,7 @@ namespace KeyGenApp
         private void button2_Click(object sender, EventArgs e)
         {
             Directory.CreateDirectory(textBox2.Text);
+            Directory.CreateDirectory(utilPath);
             // wygenerowanie kluczy o długości 4096
             RSA rsa = RSA.Create(4096);
             byte[] privateKeyBytes = rsa.ExportRSAPrivateKey();
@@ -172,10 +175,21 @@ namespace KeyGenApp
             cs.FlushFinalBlock();
             byte[] encryptedPrivateKey = ms.ToArray();
 
+            //generacja certyfikatu
+            var request = new CertificateRequest(
+                "CN=USER",
+                rsa,
+                HashAlgorithmName.SHA256,
+                RSASignaturePadding.Pkcs1
+            );
+
+            var cert = request.CreateSelfSigned(DateTimeOffset.Now, DateTimeOffset.Now.AddYears(1));
+
             // zapis do pliku
             File.WriteAllBytes(Path.Combine(textBox2.Text, ppkName), encryptedPrivateKey);
-            File.WriteAllBytes(Path.Combine(textBox2.Text, pubKeyName), publicKeyBytes);
-            File.WriteAllBytes(Path.Combine(textBox2.Text, vectorName), iv);
+            File.WriteAllBytes(Path.Combine(utilPath, pubKeyName), publicKeyBytes);
+            File.WriteAllBytes(Path.Combine(utilPath, "cert1.cer"), cert.Export(X509ContentType.Cert));
+            File.WriteAllBytes(Path.Combine(utilPath, vectorName), iv);
 
             MessageBox.Show("Klucze zapisane poprawnie!");
         }

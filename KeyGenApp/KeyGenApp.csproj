@@ -11,4 +11,10 @@
 	  <NoWarn>$(NoWarn);1591</NoWarn>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="BouncyCastle.NetCore" Version="2.2.1" />
+    <PackageReference Include="itext7" Version="9.2.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
 </Project>

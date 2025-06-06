@@ -15,6 +15,8 @@ namespace MainApp
         private const int DBT_DEVICEREMOVECOMPLETE = 0x8004;
 
         // Stałe opisujące nazwy plików i folderów
+        string utilPath = Path.Combine(Environment.GetFolderPath(
+            Environment.SpecialFolder.MyDocuments), "Utils");
         static string folder = "Klucze";
         static string pubKeyName = "publicKey.bin";
         static string ppkName = "privateKey.enc";
@@ -227,7 +229,7 @@ namespace MainApp
             byte[] aesKey = SHA256.HashData(Encoding.UTF8.GetBytes(textBox1.Text));
 
             // wczytanie danych
-            byte[] iv = File.ReadAllBytes(Path.Combine(textBox2.Text, folder, vectorName));
+            byte[] iv = File.ReadAllBytes(Path.Combine(utilPath, vectorName));
             byte[] pdfBytes = File.ReadAllBytes(textBox4.Text);
             byte[] encryptedPrivateKey = File.ReadAllBytes(Path.Combine(textBox2.Text, folder, ppkName));
 
