@@ -41,9 +41,7 @@ namespace MainApp
             textBox2 = new TextBox();
             tabPage2 = new TabPage();
             textBox5 = new TextBox();
-            textBox3 = new TextBox();
             button8 = new Button();
-            label10 = new Label();
             button5 = new Button();
             label8 = new Label();
             tabControl1.SuspendLayout();
@@ -117,7 +115,7 @@ namespace MainApp
             tabControl1.Location = new Point(0, 0);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(360, 317);
+            tabControl1.Size = new Size(360, 241);
             tabControl1.TabIndex = 13;
             // 
             // tabPage1
@@ -133,7 +131,7 @@ namespace MainApp
             tabPage1.Location = new Point(4, 24);
             tabPage1.Name = "tabPage1";
             tabPage1.Padding = new Padding(3);
-            tabPage1.Size = new Size(352, 289);
+            tabPage1.Size = new Size(352, 213);
             tabPage1.TabIndex = 0;
             tabPage1.Text = "Użytkownik A";
             tabPage1.UseVisualStyleBackColor = true;
@@ -172,15 +170,13 @@ namespace MainApp
             // tabPage2
             // 
             tabPage2.Controls.Add(textBox5);
-            tabPage2.Controls.Add(textBox3);
             tabPage2.Controls.Add(button8);
-            tabPage2.Controls.Add(label10);
             tabPage2.Controls.Add(button5);
             tabPage2.Controls.Add(label8);
             tabPage2.Location = new Point(4, 24);
             tabPage2.Name = "tabPage2";
             tabPage2.Padding = new Padding(3);
-            tabPage2.Size = new Size(352, 289);
+            tabPage2.Size = new Size(352, 213);
             tabPage2.TabIndex = 1;
             tabPage2.Text = "Użytkownik B";
             tabPage2.UseVisualStyleBackColor = true;
@@ -196,35 +192,15 @@ namespace MainApp
             textBox5.TabIndex = 14;
             textBox5.WordWrap = false;
             // 
-            // textBox3
-            // 
-            textBox3.Location = new Point(68, 69);
-            textBox3.Multiline = true;
-            textBox3.Name = "textBox3";
-            textBox3.ReadOnly = true;
-            textBox3.ScrollBars = ScrollBars.Horizontal;
-            textBox3.Size = new Size(114, 39);
-            textBox3.TabIndex = 13;
-            textBox3.WordWrap = false;
-            // 
             // button8
             // 
-            button8.Location = new Point(8, 127);
+            button8.Location = new Point(3, 182);
             button8.Name = "button8";
             button8.Size = new Size(109, 23);
             button8.TabIndex = 9;
             button8.Text = "Zweryfikuj podpis";
             button8.UseVisualStyleBackColor = true;
             button8.Click += button8_Click;
-            // 
-            // label10
-            // 
-            label10.AutoSize = true;
-            label10.Location = new Point(6, 72);
-            label10.Name = "label10";
-            label10.Size = new Size(56, 15);
-            label10.TabIndex = 3;
-            label10.Text = "Pendrive:";
             // 
             // button5
             // 
@@ -249,7 +225,7 @@ namespace MainApp
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(360, 317);
+            ClientSize = new Size(360, 241);
             Controls.Add(tabControl1);
             Name = "Form1";
             Text = "Form1";
@@ -278,10 +254,8 @@ namespace MainApp
         private TabPage tabPage2;
         private Label label8;
         private Button button5;
-        private Label label10;
         private Button button8;
         private TextBox textBox2;
-        private TextBox textBox3;
         private TextBox textBox4;
         private TextBox textBox5;
         private Panel panel1;

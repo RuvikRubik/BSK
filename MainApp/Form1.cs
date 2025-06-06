@@ -14,7 +14,8 @@ namespace MainApp
         private const int DBT_DEVICEARRIVAL = 0x8000;
         private const int DBT_DEVICEREMOVECOMPLETE = 0x8004;
 
-        // Nazwy potrzebnych plików i folderu
+        // Stałe opisujące nazwy plików i folderów
+        // Nazwy plików potrzebne do generacji kluczy
         static readonly string folder = "Klucze";
         static readonly string pubKeyName = "publicKey.bin";
         static readonly string ppkName = "privateKey.enc";
@@ -47,11 +48,7 @@ namespace MainApp
 
             // Sprawdzenie istnienia pliku pdf
             if (File.Exists(textBox5.Text))
-            {
-                // Sprawdzenie istnienia pendrive'a
-                if (textBox3.Text.Length > 0)
-                    unlockB = true;
-            }
+                unlockB = true;
 
             button4.Enabled = unlockA;
             button8.Enabled = unlockB;
@@ -83,13 +80,7 @@ namespace MainApp
                                 string pathToPpk = Path.Combine(tmp, folder, ppkName);
                                 string pathToVec = Path.Combine(tmp, folder, vectorName);
 
-                                if (File.Exists(pathToPpk) && File.Exists(pathToVec))
-                                    list.Add(tmp);
-                            }
-                            else
-                            {
-                                string pathToPubk = Path.Combine(tmp, folder, pubKeyName);
-                                if (File.Exists(pathToPubk))
+                                if (File.Exists(pathToPpk))
                                     list.Add(tmp);
                             }
                         }
@@ -110,11 +101,8 @@ namespace MainApp
             string pathToVec = Path.Combine(path, folder, vectorName);
             string pathToPubk = Path.Combine(path, folder, pubKeyName);
 
-            if (File.Exists(pathToPpk) && File.Exists(pathToVec))
+            if (File.Exists(pathToPpk))
                 textBox2.Text = path;
-
-            if (File.Exists(pathToPubk))
-                textBox3.Text = path;
 
             CheckUnlockButton();
         }
@@ -165,17 +153,11 @@ namespace MainApp
             string usb = "";
             if (tabControl1.SelectedIndex == 0)
                 usb = textBox2.Text;
-            else
-                usb = textBox3.Text;
 
 
             if (!Directory.Exists(textBox2.Text))
             {
                 textBox2.Text = "";
-            }
-            if (!Directory.Exists(textBox3.Text))
-            {
-                textBox3.Text = "";
             }
             if (!Directory.Exists(usb) && usb.Length > 0)
             {
