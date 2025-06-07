@@ -18,7 +18,6 @@ namespace KeyGenApp
         static readonly string pubKeyName = "publicKey.bin";
         static readonly string ppkName = "privateKey.enc";
         static readonly string vectorName = "iv.bin";
-        static readonly string certName = "cert1.cer";
 
         // Ścieżki
         string usbPath = "";
@@ -162,20 +161,9 @@ namespace KeyGenApp
             cs.FlushFinalBlock();
             byte[] encryptedPrivateKey = ms.ToArray();
 
-            //generacja certyfikatu
-            var request = new CertificateRequest(
-                "CN=USER",
-                rsa,
-                HashAlgorithmName.SHA256,
-                RSASignaturePadding.Pkcs1
-            );
-
-            var cert = request.CreateSelfSigned(DateTimeOffset.Now, DateTimeOffset.Now.AddYears(1));
-
             // zapis do pliku
             File.WriteAllBytes(Path.Combine(textBox2.Text, ppkName), encryptedPrivateKey);
             File.WriteAllBytes(Path.Combine(utilPath, pubKeyName), publicKeyBytes);
-            File.WriteAllBytes(Path.Combine(utilPath, certName), cert.Export(X509ContentType.Cert));
             File.WriteAllBytes(Path.Combine(utilPath, vectorName), iv);
 
             MessageBox.Show("Klucze zapisane poprawnie!");
