@@ -62,7 +62,7 @@ namespace KeyGenApp
 
                 if (dialog.ShowDialog() == DialogResult.OK)
                 {
-                    if (dialog.drive != null)
+                    if (dialog.drive != null && Directory.Exists(dialog.drive))
                     {
                         usbPath += dialog.drive;
                         textBox2.Text = Path.Combine(usbPath, folder);
@@ -78,7 +78,7 @@ namespace KeyGenApp
         /// </summary>
         void CheckIfDeviceMissing()
         {
-            if (!Directory.Exists(usbPath))
+            if (!Directory.Exists(usbPath) && usbPath.Length > 0)
             {
                 MessageBox.Show(
                     $"Pendrive: {usbPath}, został odłączony.",
