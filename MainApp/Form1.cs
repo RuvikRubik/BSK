@@ -80,10 +80,7 @@ namespace MainApp
                             // Sprawdzenie, czy pendrive jest poprawny dla aktualnego użytkownika
                             if (tabControl1.SelectedIndex == 0)
                             {
-                                string pathToPpk = Path.Combine(tmp, folder, ppkName);
-                                string pathToVec = Path.Combine(tmp, folder, vectorName);
-
-                                if (File.Exists(pathToPpk))
+                                if (File.Exists(Path.Combine(tmp, folder, ppkName)))
                                     list.Add(tmp);
                             }
                         }
@@ -101,8 +98,6 @@ namespace MainApp
         void AddDetectedDrive(string path)
         {
             string pathToPpk = Path.Combine(path, folder, ppkName);
-            string pathToVec = Path.Combine(path, folder, vectorName);
-            string pathToPubk = Path.Combine(path, folder, pubKeyName);
 
             if (File.Exists(pathToPpk))
                 textBox2.Text = path;
@@ -116,22 +111,7 @@ namespace MainApp
         void CheckForPendrives()
         {
             List<string> drives = GetPendriveList();
-
-            if (drives.Count == 1)
-            {
-                var result = MessageBox.Show(
-                    $"Wykryto pendrive: {drives[0]} \nCzy chcesz skorzystać z zawartych w nim kluczy?",
-                    "Wykryto pendrive",
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Question
-                    );
-
-                if (result == DialogResult.Yes)
-                {
-                    AddDetectedDrive(drives[0]);
-                }
-            }
-            else if (drives.Count > 1)
+            if (drives.Count > 0)
             {
                 var dialog = new Form2(drives);
 

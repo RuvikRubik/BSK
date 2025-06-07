@@ -57,23 +57,7 @@ namespace KeyGenApp
         void CheckForPendrives()
         {
             List<string> drives = GetPendriveList();
-
-            if (drives.Count == 1)
-            {
-                var result = MessageBox.Show(
-                    $"Wykryto pendrive: {drives[0]} \nCzy chcesz w nim zapisać wygenerowane klucze?",
-                    "Wykryto pendrive",
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Question
-                    );
-
-                if (result == DialogResult.Yes)
-                {
-                    usbPath += drives[0];
-                    textBox2.Text = Path.Combine(usbPath, folder);
-                }
-            }
-            else if (drives.Count > 1)
+            if (drives.Count > 0)
             {
                 var dialog = new Form2(drives);
 
