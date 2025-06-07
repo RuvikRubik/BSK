@@ -187,17 +187,22 @@ namespace MainApp
         /// <param name="e"></param>
         private void button4_Click(object sender, EventArgs e)
         {
+            if (!File.Exists(Path.Combine(utilPath, vectorName)))
+            {
+                MessageBox.Show("Brak wektora IV potrzebnego" +
+                    " do weryfikacji podpisu!", "Brak Wektora IV!",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             string inputPdfPath = textBox4.Text;
             string outputPdfPath = Path.ChangeExtension(inputPdfPath, ".signed.pdf");
-            // utworzenie klucza aes z pinu
-            byte[] aesKey = SHA256.HashData(Encoding.UTF8.GetBytes(textBox1.Text));
 
-            // wczytanie danych
+            // Odszyfrowanie klucza prywatnego
+            byte[] aesKey = SHA256.HashData(Encoding.UTF8.GetBytes(textBox1.Text));
             byte[] iv = File.ReadAllBytes(Path.Combine(utilPath, vectorName));
-            byte[] pdfBytes = File.ReadAllBytes(textBox4.Text);
             byte[] encryptedPrivateKey = File.ReadAllBytes(Path.Combine(textBox2.Text, folder, ppkName));
 
-            // tworzenie klucza aes
             using Aes aes = Aes.Create();
             aes.Key = aesKey;
             aes.IV = iv;
@@ -205,37 +210,32 @@ namespace MainApp
             using MemoryStream ms = new(encryptedPrivateKey);
             using CryptoStream cs = new(ms, aes.CreateDecryptor(), CryptoStreamMode.Read);
             using MemoryStream decryptedMs = new();
-            try
-            {
-                cs.CopyTo(decryptedMs);
-            }
-            catch
-            {
-                MessageBox.Show("Nieprawidłowy PIN!", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
+            cs.CopyTo(decryptedMs);
             byte[] privateKeyBytes = decryptedMs.ToArray();
 
-            // utwórz RSA z odszyfrowanego klucza prywatnego
             using RSA rsa = RSA.Create();
             rsa.ImportRSAPrivateKey(privateKeyBytes, out _);
 
-            // oblicz hash
-            byte[] hash = SHA256.HashData(pdfBytes);
+            // Usunięcie podpisu z PDF przed hashowaniem
+            using MemoryStream msOut = new();
+            using (PdfReader tmpReader = new(inputPdfPath))
+            using (PdfWriter tmpWriter = new(msOut))
+            using (PdfDocument tmpDoc = new(tmpReader, tmpWriter))
+            {
+                tmpDoc.GetDocumentInfo().SetMoreInfo("MySignature", null);
+            }
 
-            // podpisz hash kluczem prywatnym (emulacja PAdES)
+            byte[] hash = SHA256.HashData(msOut.ToArray());
             byte[] signature = rsa.SignHash(hash, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
             string signatureBase64 = Convert.ToBase64String(signature);
 
-            // osadź podpis w metadanych PDF
-            using PdfReader reader = new(inputPdfPath);
-            using PdfWriter writer = new(outputPdfPath);
-            using PdfDocument pdfDoc = new(reader, writer);
-
-            pdfDoc.GetDocumentInfo().SetMoreInfo("MySignature", signatureBase64);
-
-            pdfDoc.Close();
+            // Osadzenie podpisu
+            using (PdfReader reader = new(new MemoryStream(msOut.ToArray())))
+            using (PdfWriter writer = new(outputPdfPath))
+            using (PdfDocument pdfDoc = new(reader, writer))
+            {
+                pdfDoc.GetDocumentInfo().SetMoreInfo("MySignature", signatureBase64);
+            }
 
             MessageBox.Show("Plik został podpisany");
         }
@@ -325,40 +325,45 @@ namespace MainApp
             }
             if (!File.Exists(Path.Combine(utilPath, pubKeyName)))
             {
-                MessageBox.Show("Nie ma klucza publicznego potrzebnego do weryfikacji podpisu!", "Brak klucza!",
+                MessageBox.Show("Nie ma klucza publicznego potrzebnego" +
+                    " do weryfikacji podpisu!", "Brak klucza!",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             string pdfPath = textBox5.Text;
 
-            // Wczytaj podpis z metadanych PDF
-            using var pdfReader = new PdfReader(pdfPath);
-            using var pdfDoc = new PdfDocument(pdfReader);
-            var info = pdfDoc.GetDocumentInfo();
-
-            string base64Signature = info.GetMoreInfo("MySignature");
-            if (string.IsNullOrEmpty(base64Signature))
-            {
-                MessageBox.Show("Brak podpisu w pliku PDF!", "Brak podpisu",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            byte[] signature = Convert.FromBase64String(base64Signature);
-            byte[] pdfBytes = File.ReadAllBytes(pdfPath);
-
-            // Oblicz hash dokumentu
-            using SHA256 sha = SHA256.Create();
-            byte[] currentHash = sha.ComputeHash(pdfBytes);
-
-            // Wczytaj klucz publiczny
             byte[] pubKeyBytes = File.ReadAllBytes(Path.Combine(utilPath, pubKeyName));
             using RSA rsa = RSA.Create();
             rsa.ImportRSAPublicKey(pubKeyBytes, out _);
 
-            // Weryfikuj podpis (działa z kluczem publicznym)
-            bool isValid = rsa.VerifyHash(currentHash, signature, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+            byte[] pdfBytes = File.ReadAllBytes(pdfPath);
+            string base64Signature = "";
+
+            byte[] hashToVerify;
+
+            // Usuń podpis z PDF i oblicz hash
+            using MemoryStream msOriginal = new(pdfBytes);
+            using MemoryStream msHash = new();
+            using (PdfReader reader = new(msOriginal))
+            using (PdfWriter writer = new(msHash))
+            using (PdfDocument pdfDoc = new(reader, writer))
+            {
+                var info = pdfDoc.GetDocumentInfo();
+                base64Signature = info.GetMoreInfo("MySignature");
+                info.SetMoreInfo("MySignature", null); // Usuń podpis
+            }
+
+            if (string.IsNullOrEmpty(base64Signature))
+            {
+                MessageBox.Show("Brak podpisu w pliku PDF!", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            hashToVerify = SHA256.HashData(msHash.ToArray());
+
+            byte[] signature = Convert.FromBase64String(base64Signature);
+            bool isValid = rsa.VerifyHash(hashToVerify, signature, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
 
             MessageBox.Show(isValid ? "Podpis poprawny." : "Podpis NIEPOPRAWNY.");
         }
