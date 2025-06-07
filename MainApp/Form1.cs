@@ -361,7 +361,45 @@ namespace MainApp
         /// <param name="e"></param>
         private void button8_Click(object sender, EventArgs e)
         {
+            if (!File.Exists(textBox5.Text))
+            {
+                MessageBox.Show("Błąd pliku!!!", "Wybrany plik nie istnieje!!!",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
+            var reader = new PdfReader(textBox5.Text);
+            var pdfDoc = new PdfDocument(reader);
+            var signUtil = new SignatureUtil(pdfDoc);
+
+            foreach (var sigName in signUtil.GetSignatureNames())
+            {
+                var pkcs7 = signUtil.ReadSignatureData(sigName);
+
+                // Wczytywanie klucza publicznego
+                byte[] pubKeyBytes = File.ReadAllBytes(Path.Combine(utilPath, pubKeyName));
+                var rsaParams = new RSAParameters();
+                using (var rsa = RSA.Create())
+                {
+                    rsa.ImportRSAPublicKey(pubKeyBytes, out _);
+                    rsaParams = rsa.ExportParameters(false);
+                }
+
+                // Konwersja klucz .NET RSA na BouncyCastle
+                var rsaBc = DotNetUtilities.GetRsaPublicKey(rsaParams);
+
+                var signerCert = pkcs7.GetSigningCertificate();
+                var sigKey = signerCert.GetPublicKey();
+
+                if (sigKey.Equals(rsaBc) && pkcs7.VerifySignatureIntegrityAndAuthenticity())
+                {
+                    MessageBox.Show($"Podpis {sigName} jest prawidłowy i pasuje do publicKey.bin");
+                }
+                else
+                {
+                    MessageBox.Show($"Podpis {sigName} jest nieprawidłowy lub klucz nie pasuje.");
+                }
+            }
         }
     }
 }
