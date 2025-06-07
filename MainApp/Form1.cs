@@ -1,10 +1,6 @@
 using iText.Kernel.Pdf;
-using iText.Signatures;
 using KeyGenApp;
-using Org.BouncyCastle.Security;
-using Org.BouncyCastle.X509;
 using System.Security.Cryptography;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -311,7 +307,7 @@ namespace MainApp
         }
 
         /// <summary>
-        /// 
+        /// Metoda zajmuje się weryfikacją podpisu
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
