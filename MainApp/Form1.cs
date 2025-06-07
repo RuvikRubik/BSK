@@ -347,6 +347,13 @@ namespace MainApp
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+            if (!File.Exists(Path.Combine(utilPath, pubKeyName)))
+            {
+                MessageBox.Show("Brak klucza!!!", "Nie ma klucza publicznego " +
+                    "potrzebnego do weryfikacji podpisu!!!",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
             var reader = new PdfReader(textBox5.Text);
             var pdfDoc = new PdfDocument(reader);
