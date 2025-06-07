@@ -1,9 +1,12 @@
+using iText.Kernel.Pdf;
+using iText.Signatures;
 using KeyGenApp;
-using System.Numerics;
+using Org.BouncyCastle.Security;
+using Org.BouncyCastle.X509;
 using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
 
 namespace MainApp
 {
@@ -200,7 +203,39 @@ namespace MainApp
 
         void SignPDFwithRSA(RSA rsa)
         {
-            
+            string sourcePath = textBox4.Text;
+            string outputPath = Path.ChangeExtension(sourcePath, ".signed.pdf");
+            string certPath = Path.Combine(utilPath, certName);
+
+            // Wczytanie certyfikatu
+            var cert = new X509Certificate2(certPath);
+            var bcCert = new X509CertificateParser().ReadCertificate(cert.RawData);
+
+            // Przekształcenie klucza na włąściwy format
+            var bcKeyPair = DotNetUtilities.GetKeyPair(rsa);
+            var bcPrivateKey = bcKeyPair.Private;
+
+            // Ustawienie signera
+            using var pdfReader = new PdfReader(sourcePath);
+            using var pdfOutput = new FileStream(outputPath, FileMode.Create, FileAccess.Write);
+            var signer = new PdfSigner(pdfReader, pdfOutput, new StampingProperties());
+
+            // Dane pdopisu graficznego
+            var appearance = signer.GetSignatureAppearance()
+                .SetReason("Podpis cyfrowy")
+                .SetLocation("Lokalnie")
+                .SetPageRect(new iText.Kernel.Geom.Rectangle(36, 648, 200, 100))
+                .SetPageNumber(1)
+                .SetReuseAppearance(false);
+
+            signer.SetFieldName("Signature1");
+
+
+            IExternalSignature pks = new PrivateKeySignature(bcPrivateKey, "SHA-256");
+            Org.BouncyCastle.X509.X509Certificate[] chain = { bcCert };
+
+
+            signer.SignDetached(pks, chain, null, null, null, 8192, PdfSigner.CryptoStandard.CADES);
         }
 
         /// <summary>
@@ -244,8 +279,7 @@ namespace MainApp
             using RSA rsa = RSA.Create();
             rsa.ImportRSAPrivateKey(privateKeyBytes, out _);
 
-            string outputPath = Path.ChangeExtension(textBox4.Text, ".signed.pdf");
-
+            SignPDFwithRSA(rsa);
 
             MessageBox.Show("Plik został podpisany");
         }
