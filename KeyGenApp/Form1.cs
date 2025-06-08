@@ -133,7 +133,7 @@ namespace KeyGenApp
         }
 
         /// <summary>
-        /// wygenerowanie kluczy i zapis
+        /// wygenerowanie kluczy i ich zapis do plików
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>

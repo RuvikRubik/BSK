@@ -233,6 +233,37 @@ namespace MainApp
         }
 
         /// <summary>
+        /// Metoda zajmuje sie dekrypcją klucza prywatnego.
+        /// </summary>
+        /// <returns>Ciąg bajtów reprezentujący odszyfrowany klucz prywatny.</returns>
+        private byte[] DecryptPrivKey()
+        {
+            // Załądowanie zmiennych do dekrypcji klucza prywatnego
+            byte[] aesKey = SHA256.HashData(Encoding.UTF8.GetBytes(textBox1.Text));
+            byte[] iv = File.ReadAllBytes(Path.Combine(utilPath, vectorName));
+            byte[] encrPrivKey = File.ReadAllBytes(Path.Combine(textBox2.Text, folder, ppkName));
+
+            // Tworzenie obiektu eas do dekrypcji klucza
+            using Aes aes = Aes.Create();
+            aes.Key = aesKey;
+            aes.IV = iv;
+
+            // Dekrypcja klucza
+            try
+            {
+                using MemoryStream ms = new(encrPrivKey);
+                using CryptoStream cs = new(ms, aes.CreateDecryptor(), CryptoStreamMode.Read);
+                using MemoryStream decryptedMs = new();
+                cs.CopyTo(decryptedMs);
+                return decryptedMs.ToArray();
+            }
+            catch
+            {
+                return [];
+            }
+        }
+
+        /// <summary>
         /// Metoda zajmująca sie pdopisywaniem pliku.
         /// </summary>
         /// <param name="sender"></param>
@@ -242,9 +273,8 @@ namespace MainApp
             // Sprawdzenie, czy jesy wektor inicjalny do dekrypcji klucza prywatnego
             if (!File.Exists(Path.Combine(utilPath, vectorName)))
             {
-                MessageBox.Show("Brak wektora IV potrzebnego" +
-                    " do weryfikacji podpisu!", "Brak Wektora IV!",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Brak wektora IV potrzebnego do weryfikacji podpisu!",
+                    "Brak Wektora IV!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             if (!File.Exists(textBox4.Text))
@@ -257,26 +287,10 @@ namespace MainApp
             string inPath = textBox4.Text;
             string outPath = Path.ChangeExtension(inPath, ".signed.pdf");
 
-            // Załadowanie zmiennych potrzebnych do dekrypcji klucza prywatnego
-            byte[] aesKey = SHA256.HashData(Encoding.UTF8.GetBytes(textBox1.Text));
-            byte[] iv = File.ReadAllBytes(Path.Combine(utilPath, vectorName));
-            byte[] encryptedPrivateKey = File.ReadAllBytes(Path.Combine(textBox2.Text, folder, ppkName));
-
-            using Aes aes = Aes.Create();
-            aes.Key = aesKey;
-            aes.IV = iv;
-            byte[] privKeyBytes = { };
-
             // Odszyfrowanie klucza prywatnego 
-            try
-            {
-                using MemoryStream ms = new(encryptedPrivateKey);
-                using CryptoStream cs = new(ms, aes.CreateDecryptor(), CryptoStreamMode.Read);
-                using MemoryStream decryptedMs = new();
-                cs.CopyTo(decryptedMs);
-                privKeyBytes = decryptedMs.ToArray();
-            }
-            catch
+            byte[] privKeyBytes = DecryptPrivKey();
+
+            if (privKeyBytes.Length == 0) 
             {
                 // Reakcja przy błądzie dekrypcji (powodowany złym pinem)
                 MessageBox.Show("Podany PIN nie pasuje do klucza prywatnego na nośniku.",
@@ -290,7 +304,17 @@ namespace MainApp
             rsa.ImportRSAPrivateKey(privKeyBytes, out _);
 
             // Przekazanie czynności podpisu do dedykowanej metody
-            SignPdf(inPath, outPath, rsa);
+            try
+            {
+                SignPdf(inPath, outPath, rsa);
+            }
+            catch
+            {
+                MessageBox.Show("Podany plik już został podpisany przez tą aplikację.",
+                    "Plik już podpisany!!!",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
             MessageBox.Show("Plik został podpisany.");
         }
 
@@ -381,23 +405,22 @@ namespace MainApp
 
             if (signNames.Count == 0) return false;
 
-            // Bierzemy pierwszy podpis. W przypadku wielu podpisów można iterować po signatureNames.
+            // Sprawdzenie czy w pliku jest podpis wykonany przez aplikacje
             string? signFieldName = signNames.FirstOrDefault();
-            if (string.IsNullOrEmpty(signFieldName)) return false;
-
+            if (!signUtil.GetSignatureNames().Contains("MySignature")) return false;
 
             var signDict = signUtil.GetSignatureDictionary(signFieldName);
 
-            // Pobieramy surowe bajty podpisu z pola /Contents. To jest zaszyfrowany hash (podpis).
+            // Pobranie zaszyfrowanego podpisu
             var contents = signDict.GetAsString(PdfName.Contents).GetValueBytes();
 
-            // Pobieramy informacje o ByteRange, które określają, które fragmenty PDF-a zostały podpisane.
+            // Pobranie informacji o ByteRange do utworzenia hasha dokumentu
             var byteRangeArray = signDict.GetAsArray(PdfName.ByteRange);
             var byteRange = new int[byteRangeArray.Size()];
             for (int i = 0; i < byteRangeArray.Size(); i++)
                 byteRange[i] = byteRangeArray.GetAsNumber(i).IntValue();
 
-            // Ręcznie odczytujemy bajty z pliku PDF zgodnie z ByteRange.
+            // Ręczne odczytanie byteRange i tworzenie ciągu bajtów do utworzenia hasha
             using var fs = new FileStream(path, FileMode.Open, FileAccess.Read);
             using var rangeStream = new MemoryStream();
             for (int i = 0; i < byteRange.Length; i += 2)
@@ -408,13 +431,14 @@ namespace MainApp
                 rangeStream.Write(buffer, 0, buffer.Length);
             }
 
-            rangeStream.Position = 0; // Ustawiamy pozycję strumienia na początek przed hashowaniem
+            // Reset pozycji strumienia przed hashem
+            rangeStream.Position = 0;
 
-            // Obliczamy hash z odczytanych bajtów.
+            // Oblicznie hasha i jego weryfikacja z dekrypcją kluczem publicznym
             using var sha = SHA256.Create();
-            byte[] computedHash = sha.ComputeHash(rangeStream);
+            byte[] hash = sha.ComputeHash(rangeStream);
 
-            return rsa.VerifyHash(computedHash, contents, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+            return rsa.VerifyHash(hash, contents, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
         }
 
         /// <summary>
