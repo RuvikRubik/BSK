@@ -312,7 +312,18 @@ namespace MainApp
 
             // wczytanie klucza prywtnego do obiektu RSA
             using RSA rsa = RSA.Create();
-            rsa.ImportRSAPrivateKey(privKeyBytes, out _);
+            try
+            {
+                rsa.ImportRSAPrivateKey(privKeyBytes, out _);
+            }
+            catch
+            {
+                // Reakcja przy błądzie dekrypcji (powodowany złym IV)
+                MessageBox.Show("Zapisany na dysku wektor inicjalny nie pasuje do klucza prywatnego!",
+                    "Błędny IV!!!",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
             // Przekazanie czynności podpisu do dedykowanej metody
             try
