@@ -224,8 +224,9 @@ namespace MainApp
             if (signUtil.GetSignatureNames().Contains("MySignature")) throw new Exception();
 
             // Prep signera do wykonania podpisu
+            using var reader2 = new PdfReader(inPath);
             using var outStream = new FileStream(outPath, FileMode.Create);
-            var signer = new PdfSigner(reader, outStream, new StampingProperties());
+            var signer = new PdfSigner(reader2, outStream, new StampingProperties());
 
             // Przygotowanie pola do podpisu
             signer.SetFieldName("MySignature");
