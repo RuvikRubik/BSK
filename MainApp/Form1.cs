@@ -289,6 +289,13 @@ namespace MainApp
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+            if (!File.Exists(Path.Combine(textBox2.Text, folder, ppkName)))
+            {
+                MessageBox.Show("Klucz prywatny został usunięty z nośnika przed podpisem!",
+                    "Brak klucza prywatnego!",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
             string inPath = textBox4.Text;
             string outPath = Path.ChangeExtension(inPath, ".signed.pdf");
