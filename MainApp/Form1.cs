@@ -165,19 +165,17 @@ namespace MainApp
         /// </summary>
         void CheckIfDeviceMissing()
         {
-            string usb = textBox2.Text;
-
-            if (!Directory.Exists(textBox2.Text))
+            if (!Directory.Exists(textBox2.Text) && textBox2.Text.Length > 0)
             {
+                if (tabControl1.SelectedIndex == 0)
+                {
+                    MessageBox.Show(
+                        $"Pendrive: {textBox2.Text}, został odłączony.",
+                        "Urządzenie odłaczone!!!",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+                }
                 textBox2.Text = "";
-            }
-            if (!Directory.Exists(usb) && usb.Length > 0 && tabControl1.SelectedIndex == 0)
-            {
-                MessageBox.Show(
-                    $"Pendrive: {usb}, został odłączony.",
-                    "Urządzenie odłaczone!!!",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning);
             }
             CheckUnlockButton();
         }
