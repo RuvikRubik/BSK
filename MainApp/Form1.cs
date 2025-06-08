@@ -12,11 +12,11 @@ namespace MainApp
     /// </summary>
     public class CustomSignature : IExternalSignatureContainer
     {
-        private readonly RSA _privateRsa;
+        private readonly RSA _privKey;
 
-        public CustomSignature(RSA privateRsa)
+        public CustomSignature(RSA privKey)
         {
-            _privateRsa = privateRsa;
+            _privKey = privKey;
         }
 
         public byte[] Sign(Stream data)
@@ -24,7 +24,7 @@ namespace MainApp
             // Tworzenie signatury na podstwie hasha zawartości pliku i podpisanie go
             using var sha256 = SHA256.Create();
             byte[] hash = sha256.ComputeHash(data);
-            return _privateRsa.SignHash(hash, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+            return _privKey.SignHash(hash, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
         }
 
         public void ModifySigningDictionary(PdfDictionary signDic)
@@ -218,8 +218,14 @@ namespace MainApp
         /// <param name="rsa">Odszyfrowany klucz prywatny RSA.</param>
         public void SignPdf(string inPath, string outPath, RSA rsa)
         {
-            // Prep signera do wykonania podpisu
+            // Sprawdzenie czy w pliku jest podpis wykonany przez aplikacje
             using var reader = new PdfReader(inPath);
+            using var pdfDoc = new PdfDocument(reader);
+            var signUtil = new SignatureUtil(pdfDoc);
+
+            if (signUtil.GetSignatureNames().Contains("MySignature")) throw new Exception();
+
+            // Prep signera do wykonania podpisu
             using var outStream = new FileStream(outPath, FileMode.Create);
             var signer = new PdfSigner(reader, outStream, new StampingProperties());
 
@@ -400,16 +406,10 @@ namespace MainApp
             using var pdfDoc = new PdfDocument(reader);
             var signUtil = new SignatureUtil(pdfDoc);
 
-            var names = signUtil.GetSignatureNames();
-            IList<string> signNames = signUtil.GetSignatureNames();
-
-            if (signNames.Count == 0) return false;
-
             // Sprawdzenie czy w pliku jest podpis wykonany przez aplikacje
-            string? signFieldName = signNames.FirstOrDefault();
-            if (!signUtil.GetSignatureNames().Contains("MySignature")) return false;
+            if (!signUtil.GetSignatureNames().Contains("MySignature")) throw new Exception();
 
-            var signDict = signUtil.GetSignatureDictionary(signFieldName);
+            var signDict = signUtil.GetSignatureDictionary("MySignature");
 
             // Pobranie zaszyfrowanego podpisu
             var contents = signDict.GetAsString(PdfName.Contents).GetValueBytes();
@@ -470,8 +470,18 @@ namespace MainApp
             using RSA rsa = RSA.Create();
             rsa.ImportRSAPublicKey(pubKeyBytes, out _);
 
+            bool isValid;
             // Sprawdzenie poprawności podpisu
-            bool isValid = VerifySignature(pdfPath, rsa);
+            try
+            {
+                isValid = VerifySignature(pdfPath, rsa);
+            }
+            catch
+            {
+                MessageBox.Show("Plik nie został podpisany w aplikcaji.", "Brak podpisu!",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
             MessageBox.Show(isValid ? "Podpis jest POPRAWNY." : "Podpis jest NIEPOPRAWNY.");
         }
